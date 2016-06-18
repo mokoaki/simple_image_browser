@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <img id="image" style="width:100%">
+
+  <script type="text/javascript">
+    var file_path = "./";
+    var file_name = "画像ファイル名";
+    var file_extension = "jpg";
+    var page_zero_suppress = 3;
+
+    // e.g.
+    // ./画像ファイル名_001.jpg
+
+    var page_count = 1;
+    var image = document.getElementById("image");
+
+    update_image();
+
+    document.onmousedown = function (e){
+      if (e.clientX < image.width / 2) {
+        page_count -= 1;
+
+        if (page_count < 1) {
+          page_count = 1;
+        }
+      }
+      else {
+        page_count += 1;
+      }
+
+      update_image();
+    };
+
+    function update_image() {
+      image.src = get_file_path();
+      window.scrollTo(0, 0) ;
+      return true;
+    }
+
+    function get_file_path() {
+      return file_path + file_name + "_" + get_page_index() + "." + file_extension;
+    }
+
+    function get_page_index() {
+      return (get_suppress() + page_count).slice(-3);
+    }
+
+    function get_suppress() {
+      var result = ""
+      for (var i = 0; i < page_zero_suppress; i++) {
+        result += "0";
+      }
+      return result;
+    }
+
+    // 戻る無効っぽい？
+    history.pushState(null, null, null);
+
+    window.addEventListener("popstate", function() {
+      history.pushState(null, null, null);
+    });
+  </script>
+</body>
+</heml>
