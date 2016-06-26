@@ -11,32 +11,51 @@
     var file_extension = "jpg";
     var page_zero_suppress = 3;
 
-    // e.g.
+    // ↑ e.g.
     // ./画像ファイル名_001.jpg
 
-    var page_count = 1;
+    var page_count;
     var image = document.getElementById("image");
 
+    init_page_count();
     update_image();
 
     document.onmousedown = function (e){
-      if (e.clientX < image.width / 2) {
-        page_count -= 1;
+      init_page_count();
 
-        if (page_count < 1) {
-          page_count = 1;
-        }
+      if (e.clientX > image.width / 2) {
+        // 右半分クリック / 次のページ
+        page_count += 1;
+        update_image();
+        window.scrollTo(0, 0) ;
       }
       else {
-        page_count += 1;
+        // 左半分クリック / 前のページ
+        if (page_count < 1) {
+          return true;
+        }
+
+        page_count -= 1;
+        update_image();
+        window.scrollTo(0, screen.height);
       }
 
-      update_image();
+      return true;
     };
+
+    function init_page_count() {
+      page_count = parseInt(page_count);
+
+      if (isFinite(page_count) === false) {
+        page_count = 1
+      }
+
+      return true;
+    }
 
     function update_image() {
       image.src = get_file_path();
-      window.scrollTo(0, 0) ;
+
       return true;
     }
 
@@ -50,9 +69,11 @@
 
     function get_suppress() {
       var result = ""
+
       for (var i = 0; i < page_zero_suppress; i++) {
         result += "0";
       }
+
       return result;
     }
 
