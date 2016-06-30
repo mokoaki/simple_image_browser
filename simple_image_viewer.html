@@ -3,86 +3,100 @@
   <meta charset="UTF-8">
 </head>
 <body>
-  <img id="image" style="width:100%">
+  <img id="image">
 
   <script type="text/javascript">
-    var file_path = "./";
-    var file_name = "画像ファイル名";
-    var file_extension = "jpg";
-    var page_zero_suppress = 3;
+    (function(){
+      var file_path         = "./";
+      var file_name         = "画像ファイル名";
+      var file_extension    = ".jpg";
+      var zero_suppress_num = 3;
 
-    // ↑ e.g.
-    // ./画像ファイル名_001.jpg
+      // ↑ e.g.
+      // ./画像ファイル名_001.jpg
 
-    var page_count;
-    var image = document.getElementById("image");
+      var image = window.document.getElementById("image");
 
-    init_page_count();
-    update_image();
+      image.style.width = "100%";
 
-    document.onmousedown = function (e){
-      init_page_count();
+      set_page_url(get_page_from_hash());
+      update_image();
 
-      if (e.clientX > image.width / 2) {
-        // 右半分クリック / 次のページ
-        page_count += 1;
-        update_image();
-        window.scrollTo(0, 0) ;
-      }
-      else {
-        // 左半分クリック / 前のページ
-        if (page_count < 1) {
-          return true;
+      window.document.onmousedown = function (e){
+        var page = get_page_from_hash();
+
+        if (e.clientX > image.width / 2) {
+          // 右半分クリック / 次のページ
+          set_page_url(page + 1);
+          update_image();
+          window.scrollTo(0, 0) ;
+        }
+        else {
+          // 左半分クリック / 前のページ
+          if (page === 1) {
+            return true;
+          }
+
+          set_page_url(page - 1);
+          update_image();
+          window.scrollTo(0, screen.height);
         }
 
-        page_count -= 1;
-        update_image();
-        window.scrollTo(0, screen.height);
+        return true;
+      };
+
+      function get_page_from_hash() {
+        var page_string = window.document.location.hash.substring(1);
+        var page        = parseInt(page_string, 10);
+
+        if (isFinite(page) === false || page < 1) {
+          page = 1;
+        }
+
+        return page;
       }
 
-      return true;
-    };
+      function set_page_url(page) {
+        var path_hash = "#" + get_suppresses_page(page);
+        history.replaceState("", "", path_hash);
 
-    function init_page_count() {
-      page_count = parseInt(page_count);
-
-      if (isFinite(page_count) === false) {
-        page_count = 1
+        return true;
       }
 
-      return true;
-    }
+      function update_image() {
+        image.src = get_file_path_from_hash();
 
-    function update_image() {
-      image.src = get_file_path();
-
-      return true;
-    }
-
-    function get_file_path() {
-      return file_path + file_name + "_" + get_page_index() + "." + file_extension;
-    }
-
-    function get_page_index() {
-      return (get_suppress() + page_count).slice(-3);
-    }
-
-    function get_suppress() {
-      var result = ""
-
-      for (var i = 0; i < page_zero_suppress; i++) {
-        result += "0";
+        return true;
       }
 
-      return result;
-    }
+      function get_file_path_from_hash() {
+        return file_path + file_name + "_" + get_suppresses_page(get_page_from_hash()) + file_extension;
+      }
 
-    // 戻る無効っぽい？
-    history.pushState(null, null, null);
+      function get_suppresses_page(page) {
+        return (get_suppress_zero() + page).slice(-zero_suppress_num);
+      }
 
-    window.addEventListener("popstate", function() {
+      function get_suppress_zero() {
+        var zeros = "";
+
+        for (var i = 0; i < zero_suppress_num; i++) {
+          zeros += "0";
+        }
+
+        return zeros;
+      }
+
+      // （ある程度）戻る無効っぽい
       history.pushState(null, null, null);
-    });
+
+      window.addEventListener("popstate", function() {
+        history.pushState(null, null, null);
+
+        set_page_url(get_page_from_hash());
+        update_image();
+      });
+    })();
   </script>
 </body>
 </heml>
