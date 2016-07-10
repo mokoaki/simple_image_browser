@@ -22,6 +22,17 @@
       set_page_url(get_page_from_hash());
       update_image();
 
+      window.document.onmousemove = function(e) {
+        if (e.clientX > image.width / 2) {
+          // カーソルが右半分にある / 右向きカーソル
+          image.style.cursor = "e-resize";
+        }
+        else {
+          // カーソルが左半分にある / 左向きカーソル
+          image.style.cursor = "w-resize";
+        }
+      }
+
       window.document.onmousedown = function (e){
         var page = get_page_from_hash();
 
