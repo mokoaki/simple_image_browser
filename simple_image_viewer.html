@@ -7,54 +7,14 @@
 
   <script type="text/javascript">
     (function(){
+      // e.g.
+      // ./画像ファイル名_001.jpg
       var file_path         = "./";
       var file_name         = "画像ファイル名";
       var file_extension    = ".jpg";
       var zero_suppress_num = 3;
 
-      // ↑ e.g.
-      // ./画像ファイル名_001.jpg
-
-      var image = window.document.getElementById("image");
-
-      image.style.width = "100%";
-
-      set_page_url(get_page_from_hash());
-      update_image();
-
-      window.document.onmousemove = function(e) {
-        if (e.clientX > image.width / 2) {
-          // カーソルが右半分にある / 右向きカーソル
-          image.style.cursor = "e-resize";
-        }
-        else {
-          // カーソルが左半分にある / 左向きカーソル
-          image.style.cursor = "w-resize";
-        }
-      }
-
-      window.document.onmousedown = function (e){
-        var page = get_page_from_hash();
-
-        if (e.clientX > image.width / 2) {
-          // 右半分クリック / 次のページ
-          set_page_url(page + 1);
-          update_image();
-          window.scrollTo(0, 0) ;
-        }
-        else {
-          // 左半分クリック / 前のページ
-          if (page === 1) {
-            return true;
-          }
-
-          set_page_url(page - 1);
-          update_image();
-          window.scrollTo(0, screen.height);
-        }
-
-        return true;
-      };
+      var image;
 
       function get_page_from_hash() {
         var page_string = window.document.location.hash.substring(1);
@@ -81,7 +41,9 @@
       }
 
       function get_file_path_from_hash() {
-        return file_path + file_name + "_" + get_suppresses_page(get_page_from_hash()) + file_extension;
+        var page = get_page_from_hash();
+
+        return file_path + file_name + "_" + get_suppresses_page(page) + file_extension;
       }
 
       function get_suppresses_page(page) {
@@ -98,15 +60,86 @@
         return zeros;
       }
 
-      // （ある程度）戻る無効っぽい
-      history.pushState(null, null, null);
-
-      window.addEventListener("popstate", function() {
+      function set_return_button() {
+        // （ある程度）戻る無効っぽい
         history.pushState(null, null, null);
 
-        set_page_url(get_page_from_hash());
+        window.addEventListener("popstate", function() {
+          history.pushState(null, null, null);
+
+          var page = get_page_from_hash();
+
+          set_page_url(page);
+          update_image();
+
+          return true;
+        });
+
+        return true;
+      }
+
+      function set_onmousemove() {
+        window.document.onmousemove = function(e) {
+          if (e.clientX < image.width / 2) {
+            // カーソルが左半分にある / 左向きカーソル
+            image.style.cursor = "w-resize";
+          }
+          else {
+            // カーソルが右半分にある / 右向きカーソル
+            image.style.cursor = "e-resize";
+          }
+
+          return true;
+        }
+
+        return true;
+      }
+
+      function set_onmousedown() {
+        window.document.onmousedown = function (e){
+          var page = get_page_from_hash();
+
+          if (e.clientX < image.width / 2) {
+            // 左半分クリック / 前のページ
+            if (page === 1) {
+              return true;
+            }
+
+            set_page_url(page - 1);
+            update_image();
+            window.scrollTo(0, screen.height);
+          }
+          else {
+            // 右半分クリック / 次のページ
+            set_page_url(page + 1);
+            update_image();
+            window.scrollTo(0, 0) ;
+          }
+
+          return true;
+        };
+
+        return true;
+      }
+
+      function initialize() {
+        image = window.document.getElementById("image");
+        image.style.width = "100%";
+
+        var page = get_page_from_hash();
+
+        set_page_url(page);
+
         update_image();
-      });
+
+        return true;
+      }
+
+      initialize();
+
+      set_return_button();
+      set_onmousemove();
+      set_onmousedown();
     })();
   </script>
 </body>
