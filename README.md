@@ -4,10 +4,9 @@ Edit setting
 ```javascript
 // e.g.
 // ./画像ファイル名_001.jpg
-var file_path         = "./";
-var file_name         = "画像ファイル名";
-var file_extension    = ".jpg";
+var file_path         = "./画像ファイル名_";
 var zero_suppress_num = 3;
+var file_extension    = ".jpg";
 ```
 
 - 画像の右の方をクリックすると次のページ
