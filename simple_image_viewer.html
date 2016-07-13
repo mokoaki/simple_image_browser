@@ -31,8 +31,7 @@
       function set_page_to_hash(page) {
         var path_hash = "#" + get_suppresses_page(page);
 
-        history.replaceState("", "", path_hash);
-        history.pushState(null, null, null); // 戻るボタンの軽い対応
+        history.pushState(null, null, path_hash);
 
         update_image();
       }
