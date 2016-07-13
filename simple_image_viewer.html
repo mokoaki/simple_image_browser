@@ -76,8 +76,8 @@
 
             set_page_to_hash(page - 1);
 
-            // 画面は下にスクロールした状態にする
-            window.scrollTo(0, window.screen.height);
+            // 画面は一番下にスクロールした状態にする
+            window.scrollTo(0, document.body.scrollHeight);
           }
           else {
             // 右半分クリック / 次のページ
