@@ -52,7 +52,7 @@
 
       function set_onmousemove() {
         window.document.onmousemove = function(e) {
-          if (e.clientX < window.screen.width / 2) {
+          if (e.clientX < window.innerWidth / 2) {
             // カーソルが左半分にある / 左向きカーソル
             image.style.cursor = "w-resize";
           }
@@ -67,7 +67,7 @@
         window.document.onmousedown = function (e){
           var page = get_page_from_hash();
 
-          if (e.clientX < window.screen.width / 2) {
+          if (e.clientX < window.innerWidth / 2) {
             // 左半分クリック / 前のページ
             if (page === 1) {
               return;
@@ -76,7 +76,7 @@
             set_page_to_hash(page - 1);
 
             // 画面は一番下にスクロールした状態にする
-            window.scrollTo(0, document.body.scrollHeight);
+            window.scrollTo(0, document.body.clientHeight);
           }
           else {
             // 右半分クリック / 次のページ
