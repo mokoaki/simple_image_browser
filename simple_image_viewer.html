@@ -15,8 +15,6 @@
       var zero_suppress_num = 3;
       var file_extension    = ".jpg";
 
-      var image;
-
       function get_page_from_hash() {
         var page_string = window.document.location.hash.substring(1);
         var page        = parseInt(page_string, 10);
@@ -29,7 +27,7 @@
       }
 
       function set_page_to_hash(page) {
-        var path_hash = "#" + get_suppresses_page(page);
+        var path_hash = "#" + get_zero_padding_page(page);
 
         history.pushState(null, null, path_hash);
 
@@ -43,11 +41,11 @@
       function get_file_path_from_hash() {
         var page = get_page_from_hash();
 
-        return file_path + get_suppresses_page(page) + file_extension;
+        return file_path + get_zero_padding_page(page) + file_extension;
       }
 
-      function get_suppresses_page(page) {
-        return (new Array(zero_suppress_num).fill("0").join("") + page).slice(-zero_suppress_num);
+      function get_zero_padding_page(page) {
+        return (zero_padding_string + page).slice(-zero_suppress_num);
       }
 
       function set_onmousemove() {
@@ -92,10 +90,15 @@
         image = window.document.getElementById("image");
         image.style.width = "100%";
 
+        zero_padding_string = new Array(zero_suppress_num).fill("0").join("");
+
         var page = get_page_from_hash();
 
         set_page_to_hash(page);
       }
+
+      var image;
+      var zero_padding_string;
 
       initialize();
 
