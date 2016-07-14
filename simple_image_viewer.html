@@ -27,25 +27,19 @@
       }
 
       function set_page_to_hash(page) {
-        var path_hash = "#" + get_zero_padding_page(page);
+        var zero_paddinged_page = get_zero_padding_page(page);
+        var path_hash = "#" + zero_paddinged_page;
 
+        update_image(zero_paddinged_page);
         history.pushState(null, null, path_hash);
-
-        update_image();
-      }
-
-      function update_image() {
-        image.src = get_file_path_from_hash();
-      }
-
-      function get_file_path_from_hash() {
-        var page = get_page_from_hash();
-
-        return file_path + get_zero_padding_page(page) + file_extension;
       }
 
       function get_zero_padding_page(page) {
         return (zero_padding_string + page).slice(-zero_suppress_num);
+      }
+
+      function update_image(zero_paddinged_page) {
+        image.src = file_path + zero_paddinged_page + file_extension;
       }
 
       function set_onmousemove() {
