@@ -31,6 +31,7 @@
         var path_hash = "#" + zero_paddinged_page;
 
         update_image(zero_paddinged_page);
+
         history.pushState(null, null, path_hash);
       }
 
@@ -42,65 +43,88 @@
         image.src = file_path + zero_paddinged_page + file_extension;
       }
 
-      function set_image_margin_bottom() {
-        image.style.marginBottom = window.innerHeight + "px";
+      function set_image_margin_bottom(margin_bottom) {
+        image.style.marginBottom = margin_bottom + "px";
+      }
+
+      function reset_image_margin_bottom() {
+        set_image_margin_bottom(window.innerHeight);
+      }
+
+      function delete_image_margin_bottom() {
+        set_image_margin_bottom(0);
       }
 
       function set_onmousemove() {
+        function set_cursor(cursor_style) {
+          image.style.cursor = cursor_style;
+        }
+
         window.document.onmousemove = function(e) {
           if (e.clientX < window.innerWidth / 2) {
             // カーソルが左半分にある / 左向きカーソル
-            image.style.cursor = "w-resize";
+            set_cursor("w-resize");
           }
           else {
             // カーソルが右半分にある / 右向きカーソル
-            image.style.cursor = "e-resize";
+            set_cursor("e-resize");
           }
         };
       }
 
       function set_onmousedown() {
+        function set_scroll_page(scroll_top) {
+          window.scrollTo(0, scroll_top);
+        }
+
+        function click_left(page) {
+          if (page === 1) {
+            return;
+          }
+
+          set_page_to_hash(page - 1);
+
+          // 画面は一番下にスクロールした状態にする
+          // 左クリック時には、いったん画像下のマージンは消す
+          delete_image_margin_bottom();
+
+          // 一番下にスクロール
+          set_scroll_page(window.document.body.clientHeight);
+
+          // スクロールが終わってから画像下のマージンをリセットする
+          reset_image_margin_bottom();
+        }
+
+        function click_right(page) {
+          set_page_to_hash(page + 1);
+
+          // 画面はスクロールしていない状態にする
+          set_scroll_page(0);
+        }
+
         window.document.onmousedown = function(e) {
           var page = get_page_from_hash();
 
           if (e.clientX < window.innerWidth / 2) {
             // 左半分クリック / 前のページ
-            if (page === 1) {
-              return;
-            }
-
-            set_page_to_hash(page - 1);
-
-            // 画面は一番下にスクロールした状態にする
-            // 左クリック時には一旦、画像下のマージンを0にしておく
-            image.style.marginBottom = "0px";
-
-            // 一番下にスクロール
-            window.scrollTo(0, window.document.body.clientHeight);
-
-            // スクロールが終わってから画像下のマージンをリセットする
-            set_image_margin_bottom();
+            click_left(page);
           }
           else {
             // 右半分クリック / 次のページ
-            set_page_to_hash(page + 1);
-
-            // 画面はスクロールしていない状態にする
-            window.scrollTo(0, 0);
+            click_right(page);
           }
         };
       }
 
       function set_onresize() {
         window.onresize = function(e) {
-          set_image_margin_bottom();
+          reset_image_margin_bottom();
         };
       }
 
       function initialize() {
         image = window.document.getElementById("image");
         image.style.width = "100%";
-        set_image_margin_bottom();
 
         // 画像と背景の境目が分かりやすいように背景色を設定する。とりあえず灰色
         window.document.body.style.backgroundColor = "#dddddd";
@@ -110,6 +134,7 @@
         var page = get_page_from_hash();
 
         set_page_to_hash(page);
+        reset_image_margin_bottom();
       }
 
       var image;
