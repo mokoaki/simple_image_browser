@@ -16,7 +16,7 @@
       var file_extension    = ".jpg";
 
       function get_page_from_hash() {
-        var page_string = window.document.location.hash.substring(1);
+        var page_string = window.location.hash.substring(1);
         var page        = parseInt(page_string, 10);
 
         if (isFinite(page) === false || page < 1) {
@@ -32,7 +32,7 @@
 
         update_image(zero_paddinged_page);
 
-        history.pushState(null, null, path_hash);
+        window.history.pushState(null, null, path_hash);
       }
 
       function get_zero_padding_page(page) {
@@ -60,7 +60,7 @@
           window.document.body.style.cursor = cursor_style;
         }
 
-        window.document.onmousemove = function(e) {
+        window.onmousemove = function(e) {
           if (e.clientX < window.innerWidth / 2) {
             // カーソルが左半分にある / 左向きカーソル
             set_cursor("w-resize");
@@ -106,7 +106,7 @@
           set_scroll_page(0);
         }
 
-        window.document.onmousedown = function(e) {
+        window.onmousedown = function(e) {
           if (e.clientX < window.innerWidth / 2) {
             // 左半分クリック
             move_previous_page();
