@@ -3,8 +3,6 @@
   <meta charset="UTF-8">
 </head>
 <body>
-  <img id="image">
-
   <script>
     (function(){
       "use strict";
@@ -139,8 +137,11 @@
       }
 
       function initialize() {
-        image = window.document.getElementById("image");
+        // imgタグ作成
+        image = window.document.createElement("img");
         image.style.width = "100%";
+
+        window.document.body.appendChild(image);
 
         // 画像と背景の境目が分かりやすいように背景色を設定する。とりあえず灰色
         window.document.body.style.backgroundColor = "#dddddd";
