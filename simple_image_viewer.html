@@ -72,12 +72,14 @@
         };
       }
 
-      function set_onmousedown() {
+      function set_move_page_events() {
         function set_scroll_page(scroll_top) {
           window.scrollTo(0, scroll_top);
         }
 
-        function click_left(page) {
+        function move_previous_page() {
+          var page = get_page_from_hash();
+
           if (page === 1) {
             return;
           }
@@ -85,7 +87,7 @@
           set_page_to_hash(page - 1);
 
           // 画面は一番下にスクロールした状態にする
-          // 左クリック時には、いったん画像下のマージンは消す
+          // いったん画像下のマージンは消す
           delete_image_margin_bottom();
 
           // 一番下にスクロール
@@ -95,7 +97,9 @@
           reset_image_margin_bottom();
         }
 
-        function click_right(page) {
+        function move_next_page() {
+          var page = get_page_from_hash();
+
           set_page_to_hash(page + 1);
 
           // 画面はスクロールしていない状態にする
@@ -103,16 +107,28 @@
         }
 
         window.document.onmousedown = function(e) {
-          var page = get_page_from_hash();
-
           if (e.clientX < window.innerWidth / 2) {
-            // 左半分クリック / 前のページ
-            click_left(page);
+            // 左半分クリック
+            move_previous_page();
           }
           else {
-            // 右半分クリック / 次のページ
-            click_right(page);
+            // 右半分クリック
+            move_next_page();
           }
+        };
+
+        var KEY_CODE_AND_MOVE_FUNCTIONS = {
+          13: move_next_page,     // Enter key
+          37: move_previous_page, // Left key
+          39: move_next_page,     // Right key
+        };
+
+        window.onkeydown = function(e) {
+          if(!(e.keyCode in KEY_CODE_AND_MOVE_FUNCTIONS)) {
+            return;
+          }
+
+          KEY_CODE_AND_MOVE_FUNCTIONS[e.keyCode]();
         };
       }
 
@@ -137,7 +153,7 @@
         reset_image_margin_bottom();
 
         set_onmousemove();
-        set_onmousedown();
+        set_move_page_events();
         set_onresize();
       }
 
