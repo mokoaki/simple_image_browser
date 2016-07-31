@@ -115,18 +115,18 @@
           }
         }, false);
 
-        var KEY_CODE_AND_MOVE_FUNCTIONS = {
-          13: move_next_page,     // Enter key
-          37: move_previous_page, // Left key
-          39: move_next_page,     // Right key
+        var RECEIVE_KEY_LIST_AND_EXEC_FUNCTIONS = {
+          Enter:      move_next_page,
+          ArrowRight: move_next_page,
+          ArrowLeft:  move_previous_page,
         };
 
         window.addEventListener("keydown", function(e) {
-          if(!(e.keyCode in KEY_CODE_AND_MOVE_FUNCTIONS)) {
-            return;
-          }
+          var exec_function = RECEIVE_KEY_LIST_AND_EXEC_FUNCTIONS[e.key];
 
-          KEY_CODE_AND_MOVE_FUNCTIONS[e.keyCode]();
+          if(exec_function) {
+            exec_function();
+          }
         }, false);
       }
 
