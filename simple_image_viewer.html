@@ -58,7 +58,7 @@
           window.document.body.style.cursor = cursor_style;
         }
 
-        window.onmousemove = function(e) {
+        window.addEventListener("mousemove", function(e) {
           if (e.clientX < window.innerWidth / 2) {
             // カーソルが左半分にある / 左向きカーソル
             set_cursor("w-resize");
@@ -67,7 +67,7 @@
             // カーソルが右半分にある / 右向きカーソル
             set_cursor("e-resize");
           }
-        };
+        }, false);
       }
 
       function set_move_page_events() {
@@ -104,7 +104,7 @@
           set_scroll_page(0);
         }
 
-        window.onmousedown = function(e) {
+        window.addEventListener("mousedown", function(e) {
           if (e.clientX < window.innerWidth / 2) {
             // 左半分クリック
             move_previous_page();
@@ -113,7 +113,7 @@
             // 右半分クリック
             move_next_page();
           }
-        };
+        }, false);
 
         var KEY_CODE_AND_MOVE_FUNCTIONS = {
           13: move_next_page,     // Enter key
@@ -121,19 +121,19 @@
           39: move_next_page,     // Right key
         };
 
-        window.onkeydown = function(e) {
+        window.addEventListener("keydown", function(e) {
           if(!(e.keyCode in KEY_CODE_AND_MOVE_FUNCTIONS)) {
             return;
           }
 
           KEY_CODE_AND_MOVE_FUNCTIONS[e.keyCode]();
-        };
+        }, false);
       }
 
       function set_onresize() {
-        window.onresize = function(e) {
+        window.addEventListener("resize", function(e) {
           reset_image_margin_bottom();
-        };
+        }, false);
       }
 
       function initialize() {
