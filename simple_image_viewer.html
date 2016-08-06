@@ -116,13 +116,18 @@
         }, false);
 
         var RECEIVE_KEY_LIST_AND_EXEC_FUNCTIONS = {
-          Enter:      move_next_page,
-          ArrowRight: move_next_page,
-          ArrowLeft:  move_previous_page,
+          Enter:      move_next_page,     // result chrome, firefox, safari
+          ArrowRight: move_next_page,     // result chrome, firefox
+          ArrowLeft:  move_previous_page, // result chrome, firefox
+          Right:      move_next_page,     // result safari
+          Left:       move_previous_page, // result safari
         };
 
         window.addEventListener("keydown", function(e) {
-          var exec_function = RECEIVE_KEY_LIST_AND_EXEC_FUNCTIONS[e.key];
+          // e.key           chrome, firefox
+          // e.keyIdentifier safari
+          var received_key  = e.key || e.keyIdentifier;
+          var exec_function = RECEIVE_KEY_LIST_AND_EXEC_FUNCTIONS[received_key];
 
           if(exec_function) {
             exec_function();
