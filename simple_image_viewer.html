@@ -125,7 +125,8 @@
 
         addEventListener("keydown", function(e) {
           // e.key           chrome, firefox
-          // e.keyIdentifier safari
+          // e.keyIdentifier safari (.keyIdentifier method is deprecated. However, .key method is not supported in safari.)
+
           var received_key  = e.key || e.keyIdentifier;
           var exec_function = RECEIVE_KEY_LIST_AND_EXEC_FUNCTIONS[received_key];
 
