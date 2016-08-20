@@ -59,8 +59,8 @@
           document.body.style.cursor = cursor_style;
         }
 
-        addEventListener("mousemove", function(e) {
-          if (e.clientX < innerWidth / 2) {
+        addEventListener("mousemove", function(event) {
+          if (event.clientX < innerWidth / 2) {
             // カーソルが左半分にある / 左向きカーソル
             set_cursor("w-resize");
           }
@@ -83,7 +83,9 @@
             return;
           }
 
-          set_page_to_hash(page - 1);
+          var inclement_page_num = (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) ? 10 : 1;
+
+          set_page_to_hash(page - inclement_page_num);
 
           // 画面は一番下にスクロールした状態にする
           // いったん画像下のマージンは消す
@@ -96,23 +98,24 @@
           reset_image_margin_bottom();
         }
 
-        function move_next_page() {
+        function move_next_page(event) {
           var page = get_page_from_hash();
+          var inclement_page_num = (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) ? 10 : 1;
 
-          set_page_to_hash(page + 1);
+          set_page_to_hash(page + inclement_page_num);
 
           // 画面はスクロールしていない状態にする
           set_scroll_page(0);
         }
 
-        addEventListener("mousedown", function(e) {
-          if (e.clientX < innerWidth / 2) {
+        addEventListener("mousedown", function(event) {
+          if (event.clientX < innerWidth / 2) {
             // 左半分クリック
-            move_previous_page();
+            move_previous_page(event);
           }
           else {
             // 右半分クリック
-            move_next_page();
+            move_next_page(event);
           }
         }, false);
 
@@ -124,21 +127,21 @@
           Left:       move_previous_page, // result safari
         };
 
-        addEventListener("keydown", function(e) {
-          // e.key           chrome, firefox
-          // e.keyIdentifier safari (.keyIdentifier method is deprecated. However, .key method is not supported in safari.)
+        addEventListener("keydown", function(event) {
+          // event.key           chrome, firefox
+          // event.keyIdentifier safari (.keyIdentifier method is deprecated. However, .key method is not supported in safari.)
 
-          var received_key  = e.key || e.keyIdentifier;
+          var received_key  = event.key || event.keyIdentifier;
           var exec_function = RECEIVE_KEY_LIST_AND_EXEC_FUNCTIONS[received_key];
 
           if (exec_function) {
-            exec_function();
+            exec_function(event);
           }
         }, false);
       }
 
       function set_onresize() {
-        addEventListener("resize", function(e) {
+        addEventListener("resize", function(event) {
           reset_image_margin_bottom();
         }, false);
       }

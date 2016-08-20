@@ -20,3 +20,7 @@ var file_extension    = ".jpg";
 - 左の方をクリック
 - Push left key
 - 左キーを押す
+
+### memo
+- MetaKEy, ShiftKey, AltKey, CtrlKey it will go 10 pages Press
+- 適当なそれっぽいキーを押していると10ページ遷移します
