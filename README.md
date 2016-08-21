@@ -2,11 +2,13 @@
 
 ### Edit Setting
 ```javascript
-// e.g.
-// ./画像ファイル名_001.jpg
-var file_path         = "./画像ファイル名_";
-var zero_suppress_num = 3;
-var file_extension    = ".jpg";
+var Setting = {
+  // e.g.
+  // ./path/to/file_name_001.jpg
+  file_path:         "./path/to/file_name_",
+  zero_suppress_num: 3,
+  file_extension:    ".jpg",
+};
 ```
 
 ### 次のページ Next page

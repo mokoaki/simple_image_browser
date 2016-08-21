@@ -8,170 +8,196 @@
     (function() {
       "use strict";
 
-      // e.g.
-      // ./画像ファイル名_001.jpg
-      var file_path         = "./画像ファイル名_";
-      var zero_suppress_num = 3;
-      var file_extension    = ".jpg";
+      var Setting = {
+        // e.g.
+        // ./path/to/file_name_001.jpg
+        file_path:         "./path/to/file_name_",
+        zero_suppress_num: 3,
+        file_extension:    ".jpg",
+      };
 
-      function get_page_from_hash() {
-        var page_string = location.hash.substring(1);
-        var page        = parseInt(page_string, 10);
+      var Image = {
+        init: function() {
+          this.element = document.createElement("img");
+          this.element.style.width = "100%";
+          window.document.body.appendChild(this.element);
 
-        if (isFinite(page) === false || page < 1) {
-          page = 1;
-        }
+          this.reset_margin_bottom();
+        },
 
-        return page;
-      }
+        update: function() {
+          this.element.src = Setting.file_path + Page.get_zero_padding_page() + Setting.file_extension;
+        },
 
-      function set_page_to_hash(page) {
-        var zero_paddinged_page = get_zero_padding_page(page);
-        var path_hash = "#" + zero_paddinged_page;
+        reset_margin_bottom: function() {
+          this.element.style.marginBottom = window.innerHeight + "px";
+        },
+      };
 
-        update_image(zero_paddinged_page);
+      var Page = {
+        init: function() {
+          window.document.body.style.margin         = "0px";
+          window.document.body.style.background     = "linear-gradient( -45deg, #dddddd 25%, #eeeeee 25%, #eeeeee 50%, #dddddd 50%, #dddddd 75%, #eeeeee 75%, #eeeeee )";
+          window.document.body.style.backgroundSize = "100px 100px";
+        },
 
-        history.pushState(null, null, path_hash);
-      }
+        get_hash: function() {
+          return window.location.hash.substring(1);
+        },
 
-      function get_zero_padding_page(page) {
-        return (zero_padding_string + page).slice(-zero_suppress_num);
-      }
+        get_page: function() {
+          var page = parseInt(this.get_hash(), 10);
 
-      function update_image(zero_paddinged_page) {
-        image.src = file_path + zero_paddinged_page + file_extension;
-      }
-
-      function set_image_margin_bottom(margin_bottom) {
-        image.style.marginBottom = margin_bottom + "px";
-      }
-
-      function reset_image_margin_bottom() {
-        set_image_margin_bottom(innerHeight);
-      }
-
-      function delete_image_margin_bottom() {
-        set_image_margin_bottom(0);
-      }
-
-      function set_onmousemove() {
-        function set_cursor(cursor_style) {
-          document.body.style.cursor = cursor_style;
-        }
-
-        addEventListener("mousemove", function(event) {
-          if (event.clientX < innerWidth / 2) {
-            // カーソルが左半分にある / 左向きカーソル
-            set_cursor("w-resize");
-          }
-          else {
-            // カーソルが右半分にある / 右向きカーソル
-            set_cursor("e-resize");
-          }
-        }, false);
-      }
-
-      function set_move_page_events() {
-        function set_scroll_page(scroll_top) {
-          scrollTo(0, scroll_top);
-        }
-
-        function move_previous_page() {
-          var page = get_page_from_hash();
-
-          if (page === 1) {
-            return;
+          if (isFinite(page) === false || page < 1) {
+            page = 1;
           }
 
-          var inclement_page_num = (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) ? 10 : 1;
+          return page;
+        },
 
-          set_page_to_hash(page - inclement_page_num);
+        zero_padding_string: new Array(Setting.zero_suppress_num).fill("0").join(""),
 
-          // 画面は一番下にスクロールした状態にする
-          // いったん画像下のマージンは消す
-          delete_image_margin_bottom();
+        get_zero_padding_page: function() {
+          return (this.zero_padding_string + this.get_page()).slice(-Setting.zero_suppress_num);
+        },
 
-          // 一番下にスクロール
-          set_scroll_page(document.body.clientHeight);
+        hash_check_and_replace: function() {
+          var page = String(this.get_page());
 
-          // スクロールが終わってから画像下のマージンをリセットする
-          reset_image_margin_bottom();
-        }
-
-        function move_next_page(event) {
-          var page = get_page_from_hash();
-          var inclement_page_num = (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) ? 10 : 1;
-
-          set_page_to_hash(page + inclement_page_num);
-
-          // 画面はスクロールしていない状態にする
-          set_scroll_page(0);
-        }
-
-        addEventListener("mousedown", function(event) {
-          if (event.clientX < innerWidth / 2) {
-            // 左半分クリック
-            move_previous_page(event);
+          if (this.get_hash() !== page) {
+            window.history.replaceState(null, null, "#" + page);
           }
-          else {
-            // 右半分クリック
-            move_next_page(event);
-          }
-        }, false);
+        },
 
-        var RECEIVE_KEY_LIST_AND_EXEC_FUNCTIONS = {
-          Enter:      move_next_page,     // result chrome, firefox, safari
-          ArrowRight: move_next_page,     // result chrome, firefox
-          ArrowLeft:  move_previous_page, // result chrome, firefox
-          Right:      move_next_page,     // result safari
-          Left:       move_previous_page, // result safari
-        };
+        get_move_page_num: function(event) {
+          return (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) ? 10 : 1;
+        },
 
-        addEventListener("keydown", function(event) {
-          // event.key           chrome, firefox
-          // event.keyIdentifier safari (.keyIdentifier method is deprecated. However, .key method is not supported in safari.)
+        move_page: function(page) {
+          window.history.pushState(null, null, "#" + page);
+        },
 
-          var received_key  = event.key || event.keyIdentifier;
-          var exec_function = RECEIVE_KEY_LIST_AND_EXEC_FUNCTIONS[received_key];
+        move_next_page: function(event) {
+          var replace_page = this.get_page() + this.get_move_page_num(event);
+          this.move_page(replace_page);
+          Image.update();
+          this.scroll_top();
+        },
 
-          if (exec_function) {
-            exec_function(event);
-          }
-        }, false);
-      }
+        move_previous_page: function(event) {
+          var replace_page = this.get_page() - this.get_move_page_num(event);
+          replace_page = Math.max(1, replace_page);
+          this.move_page(replace_page);
+          Image.update();
+          this.scroll_bottom();
+        },
 
-      function set_onresize() {
-        addEventListener("resize", function(event) {
-          reset_image_margin_bottom();
-        }, false);
-      }
+        scroll: function(top) {
+          window.scrollTo(0, top);
+        },
 
-      function initialize() {
-        // imgタグ作成
-        image = document.createElement("img");
-        image.style.width = "100%";
+        scroll_top: function() {
+          this.scroll(0);
+        },
 
-        document.body.appendChild(image);
+        scroll_bottom: function() {
+          this.scroll(Image.element.height - window.innerHeight);
+        },
+      };
 
-        // 画像と背景の境目が分かりやすいように背景色を設定する。とりあえず灰色
-        document.body.style.backgroundColor = "#dddddd";
+      var Event = {
+        init: function() {
+          this.set_resize();
+          this.set_mousemove();
+          this.set_mousedown();
+          this.set_keydown();
+          this.set_popstate();
+        },
 
-        zero_padding_string = new Array(zero_suppress_num).fill("0").join("");
+        set_resize: function() {
+          window.addEventListener("resize", function(event) {
+            Image.reset_margin_bottom();
+          }, false);
+        },
 
-        var page = get_page_from_hash();
+        check_mouse_position: function(event) {
+          return (event.clientX < window.innerWidth / 2);
+        },
 
-        set_page_to_hash(page);
-        reset_image_margin_bottom();
+        set_mousemove: function() {
+          var _this = this;
 
-        set_onmousemove();
-        set_move_page_events();
-        set_onresize();
-      }
+          var set_cursor = function(cursor_style) {
+            window.document.body.style.cursor = cursor_style;
+          };
 
-      var image;
-      var zero_padding_string;
+          window.addEventListener("mousemove", function(event) {
+            if (_this.check_mouse_position(event)) {
+              // カーソルが左半分にある / 左向きカーソル
+              set_cursor("w-resize");
+            }
+            else {
+              // カーソルが右半分にある / 右向きカーソル
+              set_cursor("e-resize");
+            }
+          }, false);
+        },
 
-      addEventListener("DOMContentLoaded", initialize, false);
+        set_mousedown: function() {
+          var _this = this;
+
+          window.addEventListener("mousedown", function(event) {
+            if (_this.check_mouse_position(event)) {
+              // 左半分クリック
+              Page.move_previous_page(event);
+            }
+            else {
+              // 右半分クリック
+              Page.move_next_page(event);
+            }
+          }, false);
+        },
+
+        receive_key_list_and_exec_functions: {
+          Enter:      Page.move_next_page,     // [chrome, firefox, safari]
+          ArrowRight: Page.move_next_page,     // [chrome, firefox]
+          ArrowLeft:  Page.move_previous_page, // [chrome, firefox]
+          Right:      Page.move_next_page,     // [safari]
+          Left:       Page.move_previous_page, // [safari]
+        },
+
+        set_keydown: function() {
+          var _this = this;
+
+          window.addEventListener("keydown", function(event) {
+            // event.key           [chrome, firefox]
+            // event.keyIdentifier [safari] (.keyIdentifier method is deprecated. However, .key method is not supported in safari.)
+
+            var received_key  = event.key || event.keyIdentifier;
+            var exec_function = _this.receive_key_list_and_exec_functions[received_key];
+
+            if (exec_function) {
+              exec_function.call(Page, event);
+            }
+          }, false);
+        },
+
+        set_popstate: function() {
+          window.addEventListener("popstate", function(event) {
+            Page.hash_check_and_replace();
+            Image.update();
+          }, false);
+        },
+      };
+
+      window.addEventListener("DOMContentLoaded", function() {
+        Image.init();
+        Page.init();
+        Event.init();
+
+        Page.hash_check_and_replace();
+        Image.update();
+      }, false);
     })();
   </script>
 </body>
