@@ -26,7 +26,7 @@
         },
 
         update: function(function_after_image_load) {
-          Image.call_function_after_image_load = function_after_image_load;
+          this.call_function_after_image_load = function_after_image_load;
           this.element.src = Setting.file_path + Page.get_zero_padding_page() + Setting.file_extension;
         },
 
@@ -82,14 +82,14 @@
         move_next_page: function(event) {
           var replace_page = this.get_page() + this.get_move_page_num(event);
           this.move_page(replace_page);
-          Image.update(Page.scroll_top);
+          Image.update(this.scroll_top);
         },
 
         move_previous_page: function(event) {
           var replace_page = this.get_page() - this.get_move_page_num(event);
           replace_page = Math.max(1, replace_page);
           this.move_page(replace_page);
-          Image.update(Page.scroll_bottom);
+          Image.update(this.scroll_bottom);
         },
 
         scroll_top: function() {
