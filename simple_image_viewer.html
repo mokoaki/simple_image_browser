@@ -87,7 +87,11 @@
 
         move_previous_page: function(event) {
           var replace_page = this.get_page() - this.get_move_page_num(event);
-          replace_page = Math.max(1, replace_page);
+
+          if (replace_page < 1) {
+            replace_page = 1;
+          }
+
           this.move_page(replace_page);
           Image.update(this.scroll_bottom);
         },
