@@ -126,14 +126,12 @@
         },
 
         set_mousemove: function() {
-          var _this = this;
-
           var set_cursor = function(cursor_style) {
             window.document.body.style.cursor = cursor_style;
           };
 
           window.addEventListener("mousemove", function(event) {
-            if (_this.check_mouse_position(event)) {
+            if (this.check_mouse_position(event)) {
               // カーソルが左半分にある / 左向きカーソル
               set_cursor("w-resize");
             }
@@ -141,14 +139,12 @@
               // カーソルが右半分にある / 右向きカーソル
               set_cursor("e-resize");
             }
-          }, false);
+          }.bind(this), false);
         },
 
         set_mousedown: function() {
-          var _this = this;
-
           window.addEventListener("mousedown", function(event) {
-            if (_this.check_mouse_position(event)) {
+            if (this.check_mouse_position(event)) {
               // 左半分クリック
               Page.move_previous_page(event);
             }
@@ -156,7 +152,7 @@
               // 右半分クリック
               Page.move_next_page(event);
             }
-          }, false);
+          }.bind(this), false);
         },
 
         receive_key_list_and_exec_functions: {
@@ -168,19 +164,20 @@
         },
 
         set_keydown: function() {
-          var _this = this;
-
           window.addEventListener("keydown", function(event) {
             // event.key           [chrome, firefox]
             // event.keyIdentifier [safari] (.keyIdentifier method is deprecated. However, .key method is not supported in safari.)
 
             var received_key  = event.key || event.keyIdentifier;
-            var exec_function = _this.receive_key_list_and_exec_functions[received_key];
+            var exec_function = this.receive_key_list_and_exec_functions[received_key];
 
             if (exec_function) {
               exec_function.call(Page, event);
+              // memo
+              // exec_function.bind(Page)(event);
+              // exec_function.bind(Page, event)();
             }
-          }, false);
+          }.bind(this), false);
         },
 
         set_popstate: function() {
