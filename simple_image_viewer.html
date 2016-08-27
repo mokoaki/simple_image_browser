@@ -22,14 +22,15 @@
           this.element.style.width = "100%";
           window.document.body.appendChild(this.element);
 
-          this.reset_margin_bottom();
+          this.reset_margin_bottom_and_top();
         },
 
         update: function() {
           this.element.src = Setting.file_path + Page.get_zero_padding_page() + Setting.file_extension;
         },
 
-        reset_margin_bottom: function() {
+        reset_margin_bottom_and_top: function() {
+          this.element.style.marginTop    = window.innerHeight + "px";
           this.element.style.marginBottom = window.innerHeight + "px";
         },
       };
@@ -92,16 +93,16 @@
           this.scroll_bottom();
         },
 
-        scroll: function(top) {
-          window.scrollTo(0, top);
+        scroll: function(top_position) {
+          window.scrollTo(0, top_position);
         },
 
         scroll_top: function() {
-          this.scroll(0);
+          this.scroll(window.innerHeight);
         },
 
         scroll_bottom: function() {
-          this.scroll(Image.element.height - window.innerHeight);
+          this.scroll(Image.element.height);
         },
       };
 
@@ -116,7 +117,7 @@
 
         set_resize: function() {
           window.addEventListener("resize", function(event) {
-            Image.reset_margin_bottom();
+            Image.reset_margin_bottom_and_top();
           }, false);
         },
 
@@ -186,6 +187,7 @@
           window.addEventListener("popstate", function(event) {
             Page.hash_check_and_replace();
             Image.update();
+            Page.scroll_top();
           }, false);
         },
       };
@@ -197,6 +199,7 @@
 
         Page.hash_check_and_replace();
         Image.update();
+        Page.scroll_top();
       }, false);
     })();
   </script>
