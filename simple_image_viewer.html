@@ -25,7 +25,8 @@
           this.reset_margin_bottom_and_top();
         },
 
-        update: function() {
+        update: function(function_after_image_load) {
+          Image.call_function_after_image_load = function_after_image_load;
           this.element.src = Setting.file_path + Page.get_zero_padding_page() + Setting.file_extension;
         },
 
@@ -81,28 +82,22 @@
         move_next_page: function(event) {
           var replace_page = this.get_page() + this.get_move_page_num(event);
           this.move_page(replace_page);
-          Image.update();
-          this.scroll_top();
+          Image.update(Page.scroll_top);
         },
 
         move_previous_page: function(event) {
           var replace_page = this.get_page() - this.get_move_page_num(event);
           replace_page = Math.max(1, replace_page);
           this.move_page(replace_page);
-          Image.update();
-          this.scroll_bottom();
-        },
-
-        scroll: function(top_position) {
-          window.scrollTo(0, top_position);
+          Image.update(Page.scroll_bottom);
         },
 
         scroll_top: function() {
-          this.scroll(window.innerHeight);
+          window.scrollTo(0, window.innerHeight);
         },
 
         scroll_bottom: function() {
-          this.scroll(Image.element.height);
+          window.scrollTo(0, Image.element.height);
         },
       };
 
@@ -113,6 +108,7 @@
           this.set_mousedown();
           this.set_keydown();
           this.set_popstate();
+          this.set_load();
         },
 
         set_resize: function() {
@@ -183,10 +179,15 @@
         set_popstate: function() {
           window.addEventListener("popstate", function(event) {
             Page.hash_check_and_replace();
-            Image.update();
-            Page.scroll_top();
+            Image.update(Page.scroll_top);
           }, false);
         },
+
+        set_load: function() {
+          Image.element.addEventListener("load", function(event) {
+            Image.call_function_after_image_load();
+          }, false);
+        }
       };
 
       window.addEventListener("DOMContentLoaded", function() {
@@ -195,8 +196,7 @@
         Event.init();
 
         Page.hash_check_and_replace();
-        Image.update();
-        Page.scroll_top();
+        Image.update(Page.scroll_top);
       }, false);
     })();
   </script>
