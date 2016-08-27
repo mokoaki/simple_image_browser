@@ -24,5 +24,5 @@ var Setting = {
 - 左キーを押す
 
 ### memo
-- MetaKEy, ShiftKey, AltKey, CtrlKey it will go 10 pages Press
+- MetaKey, ShiftKey, AltKey, CtrlKey it will go 10 pages Press
 - 適当なそれっぽいキーを押していると10ページ遷移します
