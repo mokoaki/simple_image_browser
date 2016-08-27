@@ -103,15 +103,15 @@
 
       var Event = {
         init: function() {
-          this.set_resize();
-          this.set_mousemove();
-          this.set_mousedown();
-          this.set_keydown();
-          this.set_popstate();
-          this.set_load();
+          this.set_resize_event_to_window();
+          this.set_mousemove_event_to_window();
+          this.set_mousedown_event_to_window();
+          this.set_keydown_event_to_window();
+          this.set_popstate_event_to_window();
+          this.set_load_event_to_image();
         },
 
-        set_resize: function() {
+        set_resize_event_to_window: function() {
           window.addEventListener("resize", function(event) {
             Image.reset_margin_bottom_and_top();
           }, false);
@@ -121,7 +121,7 @@
           return (event.clientX < window.innerWidth / 2);
         },
 
-        set_mousemove: function() {
+        set_mousemove_event_to_window: function() {
           var set_cursor = function(cursor_style) {
             window.document.body.style.cursor = cursor_style;
           };
@@ -138,7 +138,7 @@
           }.bind(this), false);
         },
 
-        set_mousedown: function() {
+        set_mousedown_event_to_window: function() {
           window.addEventListener("mousedown", function(event) {
             if (this.check_mouse_position(event)) {
               // 左半分クリック
@@ -159,7 +159,7 @@
           Left:       Page.move_previous_page, // [safari]
         },
 
-        set_keydown: function() {
+        set_keydown_event_to_window: function() {
           window.addEventListener("keydown", function(event) {
             // event.key           [chrome, firefox]
             // event.keyIdentifier [safari] (.keyIdentifier method is deprecated. However, .key method is not supported in safari.)
@@ -176,14 +176,14 @@
           }.bind(this), false);
         },
 
-        set_popstate: function() {
+        set_popstate_event_to_window: function() {
           window.addEventListener("popstate", function(event) {
             Page.hash_check_and_replace();
             Image.update(Page.scroll_top);
           }, false);
         },
 
-        set_load: function() {
+        set_load_event_to_image: function() {
           Image.element.addEventListener("load", function(event) {
             Image.call_function_after_image_load();
           }, false);
