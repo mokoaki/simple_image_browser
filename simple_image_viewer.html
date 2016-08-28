@@ -57,7 +57,8 @@
           return page;
         },
 
-        zero_padding_string: new Array(Setting.zero_suppress_num).fill("0").join(""),
+        // zero_padding_string: new Array(Setting.zero_suppress_num).fill("0").join(""), // Do not work in MS-IE11
+        zero_padding_string: Math.pow(10, Setting.zero_suppress_num).toString(10).substring(1),
 
         get_zero_padding_page: function() {
           return (this.zero_padding_string + this.get_page()).slice(-Setting.zero_suppress_num);
@@ -156,17 +157,17 @@
         },
 
         receive_key_list_and_exec_functions: {
-          Enter:      Page.move_next_page,     // [chrome, firefox, safari]
-          ArrowRight: Page.move_next_page,     // [chrome, firefox]
-          ArrowLeft:  Page.move_previous_page, // [chrome, firefox]
-          Right:      Page.move_next_page,     // [safari]
-          Left:       Page.move_previous_page, // [safari]
+          Enter:      Page.move_next_page,     // [Chrome, Firefox, Safari, MS-IE11, MS-Edge25]
+          ArrowRight: Page.move_next_page,     // [Chrome, Firefox]
+          ArrowLeft:  Page.move_previous_page, // [Chrome, Firefox]
+          Right:      Page.move_next_page,     // [Safari, MS-IE11, MS-Edge25]
+          Left:       Page.move_previous_page, // [Safari, MS-IE11, MS-Edge25]
         },
 
         set_keydown_event_to_window: function() {
           window.addEventListener("keydown", function(event) {
-            // event.key           [chrome, firefox]
-            // event.keyIdentifier [safari] (.keyIdentifier method is deprecated. However, .key method is not supported in safari.)
+            // event.key           [Chrome, Firefox, MS-IE11, MS-Edge25]
+            // event.keyIdentifier [Safari] (.keyIdentifier method is deprecated. However, .key method is not supported in Safari.)
 
             var received_key  = event.key || event.keyIdentifier;
             var exec_function = this.receive_key_list_and_exec_functions[received_key];

@@ -1,5 +1,14 @@
 ## 俺用 simple_image_viewer
 
+### Support browsers
+- Chrome
+- Firefox
+- Safari
+
+### Best effort support browsers
+- MS-IE11
+- MS-Edge25
+
 ### Edit Setting
 ```javascript
 var Setting = {
