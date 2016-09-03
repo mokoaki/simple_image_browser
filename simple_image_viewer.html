@@ -77,7 +77,24 @@
         },
 
         move_page: function(page) {
-          window.history.pushState(null, null, "#" + page);
+          if (Setting.alert_disable_flg === true) {
+            //Safari error 対応
+            return;
+          }
+
+          try {
+            window.history.pushState(null, null, "#" + page);
+          }
+          catch(error) {
+            //Safari error 対応
+            if (error.message === "SecurityError: DOM Exception 18") {
+              Setting.alert_disable_flg = true;
+              alert("reload please" + "\n\n" + error + "\n" + "message from browser");
+            }
+            else {
+              throw error;
+            }
+          }
         },
 
         move_next_page: function(event) {

@@ -3,11 +3,11 @@
 ### Support browsers
 - Chrome
 - Firefox
-- Safari
 
 ### Best effort support browsers
 - MS-IE11
 - MS-Edge25
+- Safari
 
 ### Edit Setting
 ```javascript
