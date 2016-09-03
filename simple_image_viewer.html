@@ -156,29 +156,23 @@
           }.bind(this), false);
         },
 
-        receive_key_list_and_exec_functions: {
-          Enter:      Page.move_next_page,     // [Chrome, Firefox, Safari, MS-IE11, MS-Edge25]
-          ArrowRight: Page.move_next_page,     // [Chrome, Firefox]
-          ArrowLeft:  Page.move_previous_page, // [Chrome, Firefox]
-          Right:      Page.move_next_page,     // [Safari, MS-IE11, MS-Edge25]
-          Left:       Page.move_previous_page, // [Safari, MS-IE11, MS-Edge25]
-        },
-
         set_keydown_event_to_window: function() {
           window.addEventListener("keydown", function(event) {
             // event.key           [Chrome, Firefox, MS-IE11, MS-Edge25]
             // event.keyIdentifier [Safari] (.keyIdentifier method is deprecated. However, .key method is not supported in Safari.)
-
             var received_key  = event.key || event.keyIdentifier;
-            var exec_function = this.receive_key_list_and_exec_functions[received_key];
 
-            if (exec_function) {
-              exec_function.call(Page, event);
-              // memo
-              // exec_function.bind(Page)(event);
-              // exec_function.bind(Page, event)();
+            switch (received_key) {
+              case "Enter":     // [Chrome, Firefox, Safari, MS-IE11, MS-Edge25]
+              case "ArrowRight":// [Chrome, Firefox]
+              case "Right":     // [Safari, MS-IE11, MS-Edge25]
+                Page.move_next_page(event);
+                break;
+              case "ArrowLeft": // [Chrome, Firefox]
+              case "Left":      // [Safari, MS-IE11, MS-Edge25]
+                Page.move_previous_page(event);
             }
-          }.bind(this), false);
+          }, false);
         },
 
         set_popstate_event_to_window: function() {
