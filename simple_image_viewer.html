@@ -58,7 +58,7 @@
         },
 
         // zero_padding_string: new Array(Setting.zero_suppress_num).fill("0").join(""), // Do not work in MS-IE11
-        zero_padding_string: Math.pow(10, Setting.zero_suppress_num).toString(10).substring(1),
+        zero_padding_string: String(Math.pow(10, Setting.zero_suppress_num)).substring(1),
 
         get_zero_padding_page: function() {
           return (this.zero_padding_string + this.get_page()).slice(-Setting.zero_suppress_num);
