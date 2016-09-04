@@ -18,7 +18,7 @@
 
       var Image = {
         init: function() {
-          this.element = document.createElement("img");
+          this.element = window.document.createElement("img");
           this.element.style.width = "100%";
           window.document.body.appendChild(this.element);
 
@@ -188,6 +188,7 @@
               case "ArrowLeft": // [Chrome, Firefox]
               case "Left":      // [Safari, MS-IE11, MS-Edge25]
                 Page.move_previous_page(event);
+                break;
             }
           }, false);
         },
@@ -203,7 +204,7 @@
           Image.element.addEventListener("load", function(event) {
             Image.call_function_after_image_load();
           }, false);
-        }
+        },
       };
 
       window.addEventListener("DOMContentLoaded", function() {
