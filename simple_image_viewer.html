@@ -127,7 +127,7 @@
         init: function() {
           this.set_resize_event_to_window();
           this.set_mousemove_event_to_window();
-          this.set_mousedown_event_to_window();
+          this.set_click_event_to_window();
           this.set_keydown_event_to_window();
           this.set_popstate_event_to_window();
           this.set_load_event_to_image();
@@ -160,8 +160,8 @@
           }.bind(this), false);
         },
 
-        set_mousedown_event_to_window: function() {
-          window.addEventListener("mousedown", function(event) {
+        set_click_event_to_window: function() {
+          window.addEventListener("click", function(event) {
             if (this.check_mouse_position(event)) {
               // 左半分クリック
               Page.move_previous_page(event);
