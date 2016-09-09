@@ -85,12 +85,12 @@
           }
         },
 
-        get_move_page_num: function(event) {
+        get_transition_page_num: function(event) {
           return (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) ? 10 : 1;
         },
 
-        move_page: function(page) {
-          if (this.move_page.disable_flg) {
+        transition_page: function(page) {
+          if (this.transition_page.disable_flg) {
             //Safari error 対応
             return;
           }
@@ -101,7 +101,7 @@
           catch(error) {
             //Safari error 対応
             if (error.message === "SecurityError: DOM Exception 18") {
-              this.move_page.disable_flg = true;
+              this.transition_page.disable_flg = true;
 
               alert(
                 "Please reload page" + "\n" +
@@ -120,20 +120,20 @@
           }
         },
 
-        move_next_page: function(event) {
-          var replace_page = this.get_page() + this.get_move_page_num(event);
-          this.move_page(replace_page);
+        transition_next_page: function(event) {
+          var replace_page = this.get_page() + this.get_transition_page_num(event);
+          this.transition_page(replace_page);
           Image.update(this.scroll_top);
         },
 
-        move_previous_page: function(event) {
-          var replace_page = this.get_page() - this.get_move_page_num(event);
+        transition_previous_page: function(event) {
+          var replace_page = this.get_page() - this.get_transition_page_num(event);
 
           if (replace_page < 1) {
             replace_page = 1;
           }
 
-          this.move_page(replace_page);
+          this.transition_page(replace_page);
           Image.update(this.scroll_bottom);
         },
 
@@ -187,11 +187,11 @@
           window.addEventListener("click", function(event) {
             if (this.check_mouse_position(event)) {
               // 左半分クリック
-              Page.move_previous_page(event);
+              Page.transition_previous_page(event);
             }
             else {
               // 右半分クリック
-              Page.move_next_page(event);
+              Page.transition_next_page(event);
             }
           }.bind(this), false);
         },
@@ -206,11 +206,11 @@
               case "Enter":     // [Chrome, Firefox, Safari, MS-IE11, MS-Edge25]
               case "ArrowRight":// [Chrome, Firefox]
               case "Right":     // [Safari, MS-IE11, MS-Edge25]
-                Page.move_next_page(event);
+                Page.transition_next_page(event);
                 break;
               case "ArrowLeft": // [Chrome, Firefox]
               case "Left":      // [Safari, MS-IE11, MS-Edge25]
-                Page.move_previous_page(event);
+                Page.transition_previous_page(event);
                 break;
             }
           }, false);
