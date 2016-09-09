@@ -5,7 +5,7 @@
 </head>
 <body>
   <script>
-    (function() {
+    (function(window) {
       "use strict";
 
       var Setting = {
@@ -228,7 +228,7 @@
         Page.hash_check_and_replace();
         Image.update(Page.scroll_top);
       }, false);
-    })();
+    })(window);
   </script>
 </body>
 </html>
