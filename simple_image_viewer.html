@@ -57,11 +57,24 @@
           return page;
         },
 
-        // zero_padding_string: new Array(Setting.zero_suppress_num).fill("0").join(""), // Do not work in MS-IE11
-        zero_padding_string: String(Math.pow(10, Setting.zero_suppress_num)).substring(1),
+        zero_padding_string: function() {
+          if (this.zero_padding_string.cache) {
+            return this.zero_padding_string.cache;
+          }
+
+          var result = "";
+
+          for (var i = 0; i < Setting.zero_suppress_num; i++) {
+            result += "0";
+          }
+
+          this.zero_padding_string.cache = result;
+
+          return result;
+        },
 
         get_zero_padding_page: function() {
-          return (this.zero_padding_string + this.get_page()).slice(-Setting.zero_suppress_num);
+          return (this.zero_padding_string() + this.get_page()).slice(-Setting.zero_suppress_num);
         },
 
         hash_check_and_replace: function() {
