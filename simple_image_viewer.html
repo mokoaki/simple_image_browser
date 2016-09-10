@@ -58,19 +58,17 @@
         },
 
         zero_padding_string: function() {
-          if (this.zero_padding_string.cache) {
-            return this.zero_padding_string.cache;
+          return this.zero_padding_string.cache || ( this.zero_padding_string.cache = this_calculate() );
+
+          function this_calculate() {
+            var result = "";
+
+            for (var i = 0; i < Setting.zero_suppress_num; i++) {
+              result += "0";
+            }
+
+            return result;
           }
-
-          var result = "";
-
-          for (var i = 0; i < Setting.zero_suppress_num; i++) {
-            result += "0";
-          }
-
-          this.zero_padding_string.cache = result;
-
-          return result;
         },
 
         get_zero_padding_page: function() {
