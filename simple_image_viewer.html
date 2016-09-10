@@ -38,9 +38,11 @@
 
       var Page = {
         init: function() {
-          window.document.body.style.margin         = "0px";
-          window.document.body.style.background     = "linear-gradient( -45deg, #dddddd 25%, #eeeeee 25%, #eeeeee 50%, #dddddd 50%, #dddddd 75%, #eeeeee 75%, #eeeeee )";
-          window.document.body.style.backgroundSize = "100px 100px";
+          (function(style) {
+            style.margin         = "0px";
+            style.background     = "linear-gradient( -45deg, #dddddd 25%, #eeeeee 25%, #eeeeee 50%, #dddddd 50%, #dddddd 75%, #eeeeee 75%, #eeeeee )";
+            style.backgroundSize = "100px 100px";
+          })(window.document.body.style);
         },
 
         get_hash: function() {
