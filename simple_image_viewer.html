@@ -60,9 +60,7 @@
         },
 
         zero_padding_string: function() {
-          return this.zero_padding_string.cache || ( this.zero_padding_string.cache = this_calculate() );
-
-          function this_calculate() {
+          return this.zero_padding_string.cache || (this.zero_padding_string.cache = (function() {
             var result = "";
 
             for (var i = 0; i < Setting.zero_suppress_num; i++) {
@@ -70,7 +68,7 @@
             }
 
             return result;
-          }
+          })());
         },
 
         get_zero_padding_page: function() {
