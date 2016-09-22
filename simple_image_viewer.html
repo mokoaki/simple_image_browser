@@ -97,8 +97,8 @@
             window.history.pushState(null, null, "#" + page);
           }
           catch(error) {
-            //Safari error 対応
-            if (error.message === "SecurityError: DOM Exception 18") {
+            //Safari 対応
+            if (error.name === "SecurityError") {
               this.transition_page.disable_flg = true;
 
               alert(
@@ -106,10 +106,9 @@
                 "\n" +
                 error + "\n" +
                 "\n" +
-                "100 Page transition per 30 second interval" + "\n" +
-                "excessive security message from safari !" + "\n" +
+                "Nosy security message from safari ! ヽ(`Д´)ﾉ" + "\n" +
                 "\n" +
-                "pushstate という機能を使ってURLを書き換えているのですが、Safariは30秒に100回それを行うと「セキュリティ的に怪しい！」とエラーを吐くようです。ページのリロードをお願いします。"
+                "pushState という機能を使ってURLを書き換えているのですが、Safariは30秒に100回そいつを行うと「セキュリティ的に怪しい！」とエラーを吐くようです。ページのリロードをお願いします。"
               );
             }
             else {

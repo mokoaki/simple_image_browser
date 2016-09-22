@@ -5,9 +5,9 @@
 - Firefox
 
 ### Best effort support browsers
-- MS-IE11
-- MS-Edge25
-- Safari
+- MS-IE 11
+- MS-Edge 25
+- Safari 10
 
 ### Edit Setting
 ```javascript
