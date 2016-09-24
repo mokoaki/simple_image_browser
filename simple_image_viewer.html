@@ -88,30 +88,17 @@
         },
 
         transition_page: function(page) {
-          if (this.transition_page.disable_flg) {
-            //Safari error 対応
-            return;
-          }
-
           try {
             window.history.pushState(null, null, "#" + page);
           }
           catch(error) {
-            //Safari 対応
-            if (error.name === "SecurityError") {
-              this.transition_page.disable_flg = true;
-
-              alert(
-                "Please reload page" + "\n" +
-                "\n" +
-                error + "\n" +
-                "\n" +
-                "Nosy security message from safari ! ヽ(`Д´)ﾉ" + "\n" +
-                "\n" +
-                "pushState という機能を使ってURLを書き換えているのですが、Safariは30秒に100回そいつを行うと「セキュリティ的に怪しい！」とエラーを吐くようです。ページのリロードをお願いします。"
-              );
+            // SecurityError (DOM Exception 18): Attempt to use history.pushState() more than 100 times per 30.000000 seconds
+            // Nosy security message from safari ! ヽ(`Д´)ﾉ
+            if (error.code === 18) {
+              window.location.reload(false);
             }
             else {
+              window.alert(error);
               throw error;
             }
           }
