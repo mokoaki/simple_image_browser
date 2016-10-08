@@ -1,13 +1,14 @@
 ## 俺用 simple_image_viewer
 
 ### Support browsers
-- Chrome
-- Firefox
+- Chrome 53
 
 ### Best effort support browsers
+- Firefox 49
+- Safari 10
+- Opera 40
 - MS-IE 11
 - MS-Edge 25
-- Safari 10
 
 ### Edit Setting
 ```javascript
