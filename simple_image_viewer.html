@@ -18,21 +18,21 @@
 
       var Image = {
         init: function() {
-          this.element = window.document.createElement("img");
-          this.element.style.width = "100%";
-          window.document.body.appendChild(this.element);
+          Image.element = window.document.createElement("img");
+          Image.element.style.width = "100%";
+          window.document.body.appendChild(Image.element);
 
-          this.reset_margin_bottom_and_top();
+          Image.reset_margin_bottom_and_top();
         },
 
         update: function(function_after_image_load) {
-          this.call_function_after_image_load = function_after_image_load;
-          this.element.src = Setting.file_path + Page.get_zero_padding_page() + Setting.file_extension;
+          Image.call_function_after_image_load = function_after_image_load;
+          Image.element.src = Setting.file_path + Page.get_zero_padding_page() + Setting.file_extension;
         },
 
         reset_margin_bottom_and_top: function() {
-          this.element.style.marginTop    = window.innerHeight + "px";
-          this.element.style.marginBottom = window.innerHeight + "px";
+          Image.element.style.marginTop    = window.innerHeight + "px";
+          Image.element.style.marginBottom = window.innerHeight + "px";
         },
       };
 
@@ -50,7 +50,7 @@
         },
 
         get_page: function() {
-          var page = parseInt(this.get_hash(), 10);
+          var page = parseInt(Page.get_hash(), 10);
 
           if (isFinite(page) === false || page < 1) {
             page = 1;
@@ -60,7 +60,7 @@
         },
 
         zero_padding_string: function() {
-          return this.zero_padding_string.cache || (this.zero_padding_string.cache = (function() {
+          return Page.zero_padding_string.cache || (Page.zero_padding_string.cache = (function() {
             var result = "";
 
             for (var i = 0; i < Setting.zero_suppress_num; i++) {
@@ -72,13 +72,13 @@
         },
 
         get_zero_padding_page: function() {
-          return (this.zero_padding_string() + this.get_page()).slice(-Setting.zero_suppress_num);
+          return (Page.zero_padding_string() + Page.get_page()).slice(-Setting.zero_suppress_num);
         },
 
         hash_check_and_replace: function() {
-          var page = String(this.get_page());
+          var page = String(Page.get_page());
 
-          if (this.get_hash() !== page) {
+          if (Page.get_hash() !== page) {
             window.history.replaceState(null, null, "#" + page);
           }
         },
@@ -105,39 +105,43 @@
         },
 
         transition_next_page: function(event) {
-          var replace_page = this.get_page() + this.get_transition_page_num(event);
-          this.transition_page(replace_page);
-          Image.update(this.scroll_top);
+          var replace_page = Page.get_page() + Page.get_transition_page_num(event);
+          Page.transition_page(replace_page);
+          Image.update(Page.scroll_top);
         },
 
         transition_previous_page: function(event) {
-          var replace_page = this.get_page() - this.get_transition_page_num(event);
+          var replace_page = Page.get_page() - Page.get_transition_page_num(event);
 
           if (replace_page < 1) {
             replace_page = 1;
           }
 
-          this.transition_page(replace_page);
-          Image.update(this.scroll_bottom);
+          Page.transition_page(replace_page);
+          Image.update(Page.scroll_bottom);
+        },
+
+        scroll: function(top) {
+          window.scrollTo(0, top);
         },
 
         scroll_top: function() {
-          window.scrollTo(0, window.innerHeight);
+          Page.scroll(window.innerHeight);
         },
 
         scroll_bottom: function() {
-          window.scrollTo(0, Image.element.height);
+          Page.scroll(Image.element.height);
         },
       };
 
       var Event = {
         init: function() {
-          this.set_resize_event_to_window();
-          this.set_mousemove_event_to_window();
-          this.set_click_event_to_window();
-          this.set_keydown_event_to_window();
-          this.set_popstate_event_to_window();
-          this.set_load_event_to_image();
+          Event.set_resize_event_to_window();
+          Event.set_mousemove_event_to_window();
+          Event.set_click_event_to_window();
+          Event.set_keydown_event_to_window();
+          Event.set_popstate_event_to_window();
+          Event.set_load_event_to_image();
         },
 
         set_resize_event_to_window: function() {
@@ -156,7 +160,7 @@
           };
 
           window.addEventListener("mousemove", function(event) {
-            if (this.check_mouse_position(event)) {
+            if (Event.check_mouse_position(event)) {
               // カーソルが左半分にある / 左向きカーソル
               set_cursor("w-resize");
             }
@@ -164,12 +168,12 @@
               // カーソルが右半分にある / 右向きカーソル
               set_cursor("e-resize");
             }
-          }.bind(this), false);
+          }, false);
         },
 
         set_click_event_to_window: function() {
           window.addEventListener("click", function(event) {
-            if (this.check_mouse_position(event)) {
+            if (Event.check_mouse_position(event)) {
               // 左半分クリック
               Page.transition_previous_page(event);
             }
@@ -177,7 +181,7 @@
               // 右半分クリック
               Page.transition_next_page(event);
             }
-          }.bind(this), false);
+          }, false);
         },
 
         set_keydown_event_to_window: function() {
