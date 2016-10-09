@@ -2,231 +2,243 @@
 <html>
 <head>
   <meta charset="UTF-8">
-</head>
-<body>
   <script>
     (function(window) {
       "use strict";
 
-      var Setting = {
-        // e.g.
-        // ./path/to/file_name_001.jpg
-        file_path:         "./path/to/file_name_",
-        zero_suppress_num: 3,
-        file_extension:    ".jpg",
-      };
-
-      var Image = {
-        init: function() {
-          Image.element = window.document.createElement("img");
-          Image.element.style.width = "100%";
-          window.document.body.appendChild(Image.element);
-
-          Image.reset_margin_bottom_and_top();
+      window.Siv = {
+        setting: {
+          // e.g.
+          // ./path/to/file_name_001.jpg
+          file_path:         "./path/to/file_name_",
+          zero_suppress_num: 3,
+          file_extension:    ".jpg",
         },
 
-        update: function(function_after_image_load) {
-          Image.call_function_after_image_load = function_after_image_load;
-          Image.element.src = Setting.file_path + Page.get_zero_padding_page() + Setting.file_extension;
+        initialize: function() {
+          Siv.image.init();
+          Siv.event.init();
+          Siv.page.init();
+
+          window.removeEventListener("DOMContentLoaded", Siv.initialize, false);
+
+          delete Siv.initialize;
         },
 
-        reset_margin_bottom_and_top: function() {
-          Image.element.style.marginTop    = window.innerHeight + "px";
-          Image.element.style.marginBottom = window.innerHeight + "px";
-        },
-      };
+        image: {
+          init: function() {
+            Siv.image.element = window.document.createElement("img");
+            Siv.image.element.style.width = "100%";
+            window.document.body.appendChild(Siv.image.element);
 
-      var Page = {
-        init: function() {
-          (function(style) {
-            style.margin         = "0px";
-            style.background     = "linear-gradient( -45deg, #dddddd 25%, #eeeeee 25%, #eeeeee 50%, #dddddd 50%, #dddddd 75%, #eeeeee 75%, #eeeeee )";
-            style.backgroundSize = "100px 100px";
-          })(window.document.body.style);
-        },
+            Siv.image.reset_margin_bottom_and_top();
 
-        get_hash: function() {
-          return window.location.hash.substring(1);
-        },
+            delete Siv.image.init;
+          },
 
-        get_page: function() {
-          var page = parseInt(Page.get_hash(), 10);
+          update: function(function_after_image_load) {
+            Siv.image.call_function_after_image_load = function_after_image_load;
+            Siv.image.element.src = Siv.setting.file_path + Siv.page.get_zero_padding_page() + Siv.setting.file_extension;
+          },
 
-          if (isFinite(page) === false || page < 1) {
-            page = 1;
-          }
-
-          return page;
+          reset_margin_bottom_and_top: function() {
+            Siv.image.element.style.marginTop    = window.innerHeight + "px";
+            Siv.image.element.style.marginBottom = window.innerHeight + "px";
+          },
         },
 
-        zero_padding_string: function() {
-          return Page.zero_padding_string.cache || (Page.zero_padding_string.cache = (function() {
+        page: {
+          init: function() {
+            (function(style) {
+              style.margin         = "0px";
+              style.background     = "linear-gradient( -45deg, #dddddd 25%, #eeeeee 25%, #eeeeee 50%, #dddddd 50%, #dddddd 75%, #eeeeee 75%, #eeeeee )";
+              style.backgroundSize = "100px 100px";
+            })(window.document.body.style);
+
+            Siv.page.hash_check_and_replace();
+            Siv.image.update(Siv.page.scroll_top);
+
+            delete Siv.page.init;
+          },
+
+          get_hash: function() {
+            return window.location.hash.substring(1);
+          },
+
+          get_page: function() {
+            var page = parseInt(Siv.page.get_hash(), 10);
+
+            if (isFinite(page) === false || page < 1) {
+              page = 1;
+            }
+
+            return page;
+          },
+
+          zero_padding_string: function() {
+            return Siv.page.zero_padding_string.cache || Siv.page.generate_zero_padding_string();
+          },
+
+          generate_zero_padding_string: function() {
             var result = "";
 
-            for (var i = 0; i < Setting.zero_suppress_num; i++) {
+            for (var i = 0; i < Siv.setting.zero_suppress_num; i++) {
               result += "0";
             }
 
+            Siv.page.zero_padding_string.cache = result;
+
+            delete Siv.page.generate_zero_padding_string;
+
             return result;
-          })());
-        },
+          },
 
-        get_zero_padding_page: function() {
-          return (Page.zero_padding_string() + Page.get_page()).slice(-Setting.zero_suppress_num);
-        },
+          get_zero_padding_page: function() {
+            return (Siv.page.zero_padding_string() + Siv.page.get_page()).slice(-Siv.setting.zero_suppress_num);
+          },
 
-        hash_check_and_replace: function() {
-          var page = String(Page.get_page());
+          hash_check_and_replace: function() {
+            var page = String(Siv.page.get_page());
 
-          if (Page.get_hash() !== page) {
-            window.history.replaceState(null, null, "#" + page);
-          }
-        },
-
-        get_transition_page_num: function(event) {
-          return (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) ? 10 : 1;
-        },
-
-        transition_page: function(page) {
-          try {
-            window.history.pushState(null, null, "#" + page);
-          }
-          catch(error) {
-            // SecurityError (DOM Exception 18): Attempt to use history.pushState() more than 100 times per 30.000000 seconds
-            // Nosy security message from safari ! ヽ(`Д´)ﾉ
-            if (error.code === 18) {
-              window.location.reload(false);
+            if (Siv.page.get_hash() !== page) {
+              window.history.replaceState(null, null, "#" + page);
             }
-            else {
-              window.alert(error);
-              throw error;
+          },
+
+          get_transition_page_num: function(event) {
+            return (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) ? 10 : 1;
+          },
+
+          transition_page: function(page) {
+            try {
+              window.history.pushState(null, null, "#" + page);
             }
-          }
+            catch(error) {
+              // SecurityError (DOM Exception 18): Attempt to use history.pushState() more than 100 times per 30.000000 seconds
+              // Nosy security message from safari ! ヽ(`Д´)ﾉ
+              if (error.code === 18) {
+                window.location.reload(false);
+              }
+              else {
+                window.alert(error);
+                throw error;
+              }
+            }
+          },
+
+          transition_next_page: function(event) {
+            var replace_page = Siv.page.get_page() + Siv.page.get_transition_page_num(event);
+            Siv.page.transition_page(replace_page);
+            Siv.image.update(Siv.page.scroll_top);
+          },
+
+          transition_previous_page: function(event) {
+            var replace_page = Siv.page.get_page() - Siv.page.get_transition_page_num(event);
+
+            if (replace_page < 1) {
+              replace_page = 1;
+            }
+
+            Siv.page.transition_page(replace_page);
+            Siv.image.update(Siv.page.scroll_bottom);
+          },
+
+          scroll: function(top) {
+            window.scrollTo(0, top);
+          },
+
+          scroll_top: function() {
+            Siv.page.scroll(window.innerHeight);
+          },
+
+          scroll_bottom: function() {
+            Siv.page.scroll(Siv.image.element.height);
+          },
         },
 
-        transition_next_page: function(event) {
-          var replace_page = Page.get_page() + Page.get_transition_page_num(event);
-          Page.transition_page(replace_page);
-          Image.update(Page.scroll_top);
-        },
+        event: {
+          init: function() {
+            Siv.event.set_resize_event_to_window();
+            Siv.event.set_mousemove_event_to_window();
+            Siv.event.set_click_event_to_window();
+            Siv.event.set_keydown_event_to_window();
+            Siv.event.set_popstate_event_to_window();
+            Siv.event.set_load_event_to_image();
 
-        transition_previous_page: function(event) {
-          var replace_page = Page.get_page() - Page.get_transition_page_num(event);
+            delete Siv.event;
+          },
 
-          if (replace_page < 1) {
-            replace_page = 1;
-          }
+          set_resize_event_to_window: function() {
+            window.addEventListener("resize", function(event) {
+              Siv.image.reset_margin_bottom_and_top();
+            }, false);
+          },
 
-          Page.transition_page(replace_page);
-          Image.update(Page.scroll_bottom);
-        },
+          set_mousemove_event_to_window: function() {
+            window.addEventListener("mousemove", function(event) {
+              if (event.clientX < window.innerWidth / 2) {
+                // カーソルが左半分にある / 左向きカーソル
+                window.document.body.style.cursor = "w-resize";
+              }
+              else {
+                // カーソルが右半分にある / 右向きカーソル
+                window.document.body.style.cursor = "e-resize";
+              }
+            }, false);
+          },
 
-        scroll: function(top) {
-          window.scrollTo(0, top);
-        },
+          set_click_event_to_window: function() {
+            window.addEventListener("click", function(event) {
+              if (event.clientX < window.innerWidth / 2) {
+                // 左半分クリック
+                Siv.page.transition_previous_page(event);
+              }
+              else {
+                // 右半分クリック
+                Siv.page.transition_next_page(event);
+              }
+            }, false);
+          },
 
-        scroll_top: function() {
-          Page.scroll(window.innerHeight);
-        },
+          set_keydown_event_to_window: function() {
+            window.addEventListener("keydown", function(event) {
+              // event.key           [Chrome, Firefox, Opera, MS-IE11, MS-Edge25]
+              // event.keyIdentifier [Safari] (.keyIdentifier method is deprecated. However, .key method is not supported in Safari.)
+              var received_key  = event.key || event.keyIdentifier;
 
-        scroll_bottom: function() {
-          Page.scroll(Image.element.height);
-        },
+              switch (received_key) {
+                case "Enter":     // [Chrome, Firefox, Safari, Opera, MS-IE11, MS-Edge25]
+                case "ArrowRight":// [Chrome, Firefox, Opera]
+                case "Right":     // [Safari, MS-IE11, MS-Edge25]
+                  Siv.page.transition_next_page(event);
+                  break;
+                case "ArrowLeft": // [Chrome, Firefox, Opera]
+                case "Left":      // [Safari, MS-IE11, MS-Edge25]
+                  Siv.page.transition_previous_page(event);
+                  break;
+              }
+            }, false);
+          },
+
+          set_popstate_event_to_window: function() {
+            window.addEventListener("popstate", function(event) {
+              Siv.page.hash_check_and_replace();
+              Siv.image.update(Siv.page.scroll_top);
+            }, false);
+          },
+
+          set_load_event_to_image: function() {
+            Siv.image.element.addEventListener("load", function(event) {
+              Siv.image.call_function_after_image_load();
+            }, false);
+          },
+        }
       };
 
-      var Event = {
-        init: function() {
-          Event.set_resize_event_to_window();
-          Event.set_mousemove_event_to_window();
-          Event.set_click_event_to_window();
-          Event.set_keydown_event_to_window();
-          Event.set_popstate_event_to_window();
-          Event.set_load_event_to_image();
-        },
-
-        set_resize_event_to_window: function() {
-          window.addEventListener("resize", function(event) {
-            Image.reset_margin_bottom_and_top();
-          }, false);
-        },
-
-        check_mouse_position: function(event) {
-          return (event.clientX < window.innerWidth / 2);
-        },
-
-        set_mousemove_event_to_window: function() {
-          var set_cursor = function(cursor_style) {
-            window.document.body.style.cursor = cursor_style;
-          };
-
-          window.addEventListener("mousemove", function(event) {
-            if (Event.check_mouse_position(event)) {
-              // カーソルが左半分にある / 左向きカーソル
-              set_cursor("w-resize");
-            }
-            else {
-              // カーソルが右半分にある / 右向きカーソル
-              set_cursor("e-resize");
-            }
-          }, false);
-        },
-
-        set_click_event_to_window: function() {
-          window.addEventListener("click", function(event) {
-            if (Event.check_mouse_position(event)) {
-              // 左半分クリック
-              Page.transition_previous_page(event);
-            }
-            else {
-              // 右半分クリック
-              Page.transition_next_page(event);
-            }
-          }, false);
-        },
-
-        set_keydown_event_to_window: function() {
-          window.addEventListener("keydown", function(event) {
-            // event.key           [Chrome, Firefox, Opera, MS-IE11, MS-Edge25]
-            // event.keyIdentifier [Safari] (.keyIdentifier method is deprecated. However, .key method is not supported in Safari.)
-            var received_key  = event.key || event.keyIdentifier;
-
-            switch (received_key) {
-              case "Enter":     // [Chrome, Firefox, Safari, Opera, MS-IE11, MS-Edge25]
-              case "ArrowRight":// [Chrome, Firefox, Opera]
-              case "Right":     // [Safari, MS-IE11, MS-Edge25]
-                Page.transition_next_page(event);
-                break;
-              case "ArrowLeft": // [Chrome, Firefox, Opera]
-              case "Left":      // [Safari, MS-IE11, MS-Edge25]
-                Page.transition_previous_page(event);
-                break;
-            }
-          }, false);
-        },
-
-        set_popstate_event_to_window: function() {
-          window.addEventListener("popstate", function(event) {
-            Page.hash_check_and_replace();
-            Image.update(Page.scroll_top);
-          }, false);
-        },
-
-        set_load_event_to_image: function() {
-          Image.element.addEventListener("load", function(event) {
-            Image.call_function_after_image_load();
-          }, false);
-        },
-      };
-
-      window.addEventListener("DOMContentLoaded", function() {
-        Image.init();
-        Page.init();
-        Event.init();
-
-        Page.hash_check_and_replace();
-        Image.update(Page.scroll_top);
-      }, false);
+      window.addEventListener("DOMContentLoaded", Siv.initialize, false);
     })(window);
   </script>
+</head>
+<body>
 </body>
 </html>
