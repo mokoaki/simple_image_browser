@@ -1,9 +1,26 @@
 ## 俺用 simple_image_viewer
 
+This is image viewerrrrrrrrrrrrrrr
+
+これは何かと言うと、画像ビューア（そのまんま）なのです<br>
+欲しかった機能は
+
+- 画像は横幅にフィットして拡大表示が出来る
+- 上下にスクロールして読み進める事が出来る
+- 簡単に次のページに遷移出来る
+
+ただそれだけなのに、世の中のビューアはそんな簡単な事も出来ないくせに要らない機能ばっかりつけやがってそびえたつクソしか無いので自作したのです
+
 ### Support browsers
+
+俺がメインで使っているのですぐバグに気付くと思われるブラウザ
+
 - Chrome 53
 
 ### Best effort support browsers
+
+俺がメインで使っていないのでバグに気付かないかもしれないブラウザ
+
 - Firefox 49
 - Safari 10
 - Opera 40
@@ -11,6 +28,9 @@
 - MS-Edge 25
 
 ### Edit Setting
+
+設定はココだけ
+
 ```javascript
 var Setting = {
   // e.g.
@@ -21,18 +41,27 @@ var Setting = {
 };
 ```
 
-### 次のページ Next page
+### Next page
+
+次のページ
+
 - Click right side of the window
-- 右の方をクリック
-- Push enter key or right key
-- エンターキーか右キーを押す
+- Push enter key or right arrow key
+- ウィンドウの右の方をクリックする
+- エンターキーか右カーソルキーを押す
 
-### 前のページ Previous page
+### Previous page
+
+前のページ
+
 - Click left side of the window
-- 左の方をクリック
-- Push left key
-- 左キーを押す
+- Push left arrow key
+- ウィンドウの左の方をクリックする
+- 左カーソルキーを押す
 
-### memo
+### Accelerator
+
+もっと先へ加速したくはないか、少年
+
 - MetaKey, ShiftKey, AltKey, CtrlKey it will go 10 pages Press
 - 適当なそれっぽいキーを押していると10ページ遷移します
