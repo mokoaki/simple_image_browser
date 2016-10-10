@@ -1,4 +1,4 @@
-## 俺用 simple_image_viewer
+# 俺用 simple_image_viewer
 
 This is image viewerrrrrrrrrrrrrrr
 
@@ -9,15 +9,15 @@ This is image viewerrrrrrrrrrrrrrr
 - 上下にスクロールして読み進める事が出来る
 - 簡単に次のページに遷移出来る
 
-ただそれだけなのに、世の中のビューアはそんな簡単な事も出来ないくせに要らない機能ばっかりつけやがってそびえたつクソしか無いので自作したのです
+ただそれだけなのに、世の中の画像ビューアはそんな簡単な事も出来ないくせに要らない機能ばっかり実装しやがって**そびえ立つクソしか無い**ので自作したのです
 
-### Support browsers
+## Support browsers
 
 俺がメインで使っているのですぐバグに気付くと思われるブラウザ
 
 - Chrome 53
 
-### Best effort support browsers
+## Best effort support browsers
 
 俺がメインで使っていないのでバグに気付かないかもしれないブラウザ
 
@@ -27,7 +27,7 @@ This is image viewerrrrrrrrrrrrrrr
 - MS-IE 11
 - MS-Edge 25
 
-### Edit Setting
+## Edit Setting
 
 設定はココだけ
 
@@ -41,7 +41,7 @@ var Setting = {
 };
 ```
 
-### Next page
+## Next page
 
 次のページ
 
@@ -50,7 +50,7 @@ var Setting = {
 - ウィンドウの右の方をクリックする
 - エンターキーか右カーソルキーを押す
 
-### Previous page
+## Previous page
 
 前のページ
 
@@ -59,9 +59,19 @@ var Setting = {
 - ウィンドウの左の方をクリックする
 - 左カーソルキーを押す
 
-### Accelerator
+## Accelerator
 
 もっと先へ加速したくはないか、少年
 
 - MetaKey, ShiftKey, AltKey, CtrlKey it will go 10 pages Press
 - 適当なそれっぽいキーを押していると10ページ遷移します
+
+## Test
+
+テスト
+
+- WIP
+- 各プラットフォーム・各ブラウザで自動テストを行う実験中
+
+## License
+MIT
