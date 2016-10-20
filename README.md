@@ -15,7 +15,7 @@ This is image viewerrrrrrrrrrrrrrr
 
 俺がメインで使っているのですぐバグに気付くと思われるブラウザ
 
-- Chrome 53
+- Chrome 54
 
 ## Best effort support browsers
 
@@ -32,13 +32,13 @@ This is image viewerrrrrrrrrrrrrrr
 設定はココだけ
 
 ```javascript
-var Setting = {
+setting: {
   // e.g.
   // ./path/to/file_name_001.jpg
   file_path:         "./path/to/file_name_",
   zero_suppress_num: 3,
   file_extension:    ".jpg",
-};
+},
 ```
 
 ## Next page
