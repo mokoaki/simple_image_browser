@@ -23,7 +23,7 @@ This is image viewerrrrrrrrrrrrrrr
 
 - Firefox 49
 - Safari 10
-- Opera 40
+- Opera 41
 - MS-IE 11
 - MS-Edge 25
 
