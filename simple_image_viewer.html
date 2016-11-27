@@ -6,8 +6,8 @@
     (function(window) {
       "use strict";
 
-      window.Siv = {
-        setting: {
+      var Siv = {
+        Setting: {
           // e.g.
           // ./path/to/file_name_001.jpg
           file_path:         "./path/to/file_name_",
@@ -15,103 +15,101 @@
           file_extension:    ".jpg",
         },
 
-        initialize: function() {
-          Siv.image.init();
-          Siv.event.init();
-          Siv.page.init();
+        Image: (function() {
+          var element;
 
-          window.removeEventListener("DOMContentLoaded", Siv.initialize, false);
+          function setup() {
+            element = window.document.createElement("img");
 
-          delete Siv.initialize;
-        },
+            element.style.width = "100%";
+            window.document.body.appendChild(element);
+            Image.element = element;
 
-        image: {
-          init: function() {
-            Siv.image.element = window.document.createElement("img");
-            Siv.image.element.style.width = "100%";
-            window.document.body.appendChild(Siv.image.element);
+            reset_margin_bottom_and_top();
+          }
 
-            Siv.image.reset_margin_bottom_and_top();
+          function update(function_after_image_load) {
+            Image.call_function_after_image_load = function_after_image_load;
+            element.src = Setting.file_path + Page.get_zero_padding_page() + Setting.file_extension;
+          }
 
-            delete Siv.image.init;
-          },
+          function reset_margin_bottom_and_top() {
+            element.style.marginTop    = window.innerHeight + "px";
+            element.style.marginBottom = window.innerHeight + "px";
+          }
 
-          update: function(function_after_image_load) {
-            Siv.image.call_function_after_image_load = function_after_image_load;
-            Siv.image.element.src = Siv.setting.file_path + Siv.page.get_zero_padding_page() + Siv.setting.file_extension;
-          },
+          return {
+            setup:                       setup,
+            update:                      update,
+            reset_margin_bottom_and_top: reset_margin_bottom_and_top,
+          };
+        })(),
 
-          reset_margin_bottom_and_top: function() {
-            Siv.image.element.style.marginTop    = window.innerHeight + "px";
-            Siv.image.element.style.marginBottom = window.innerHeight + "px";
-          },
-        },
-
-        page: {
-          init: function() {
+        Page: (function() {
+          function setup() {
             (function(style) {
               style.margin         = "0px";
               style.background     = "linear-gradient( -45deg, #dddddd 25%, #eeeeee 25%, #eeeeee 50%, #dddddd 50%, #dddddd 75%, #eeeeee 75%, #eeeeee )";
               style.backgroundSize = "100px 100px";
             })(window.document.body.style);
 
-            Siv.page.hash_check_and_replace();
-            Siv.image.update(Siv.page.scroll_top);
+            hash_check_and_replace();
+            Image.update(scroll_top);
+          }
 
-            delete Siv.page.init;
-          },
-
-          get_hash: function() {
+          function get_hash() {
             return window.location.hash.substring(1);
-          },
+          }
 
-          get_page: function() {
-            var page = parseInt(Siv.page.get_hash(), 10);
+          function get_page() {
+            var page = parseInt(get_hash(), 10);
 
             if (isFinite(page) === false || page < 1) {
               page = 1;
             }
 
             return page;
-          },
+          }
 
-          zero_padding_string: function() {
+          function zero_padding_string() {
             var result = "";
 
-            for (var i = 0; i < Siv.setting.zero_suppress_num; i++) {
+            for (var i = 0; i < Setting.zero_suppress_num; i++) {
               result += "0";
             }
 
-            Siv.page.zero_padding_string = function() {
+            Page.zero_padding_string = function() {
               return result;
             };
 
             return result;
-          },
+          }
 
-          get_zero_padding_page: function() {
-            return (Siv.page.zero_padding_string() + Siv.page.get_page()).slice(-Siv.setting.zero_suppress_num);
-          },
+          function get_zero_padding_page() {
+            return (zero_padding_string() + get_page()).slice(-Setting.zero_suppress_num);
+          }
 
-          hash_check_and_replace: function() {
-            var page = String(Siv.page.get_page());
+          function hash_check_and_replace() {
+            var page = get_page().toString(10);
 
-            if (Siv.page.get_hash() !== page) {
-              window.history.replaceState(null, null, "#" + page);
+            if (get_hash() !== page) {
+              var page_str = "#" + page;
+              window.history.replaceState(null, page_str, page_str);
             }
-          },
+          }
 
-          get_transition_page_num: function(event) {
+          function get_transition_page_num(event) {
             return (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) ? 10 : 1;
-          },
+          }
 
-          transition_page: function(page) {
+          function transition_page(page) {
             try {
-              window.history.pushState(null, null, "#" + page);
+              var page_str = "#" + page;
+              window.history.pushState(null, page_str, page_str);
             }
             catch(error) {
-              // SecurityError (DOM Exception 18): Attempt to use history.pushState() more than 100 times per 30.000000 seconds
               // Nosy security message from safari ! ヽ(`Д´)ﾉ
+              // SecurityError (DOM Exception 18): Attempt to use history.pushState() more than 100 times per 30.000000 seconds
               if (error.code === 18) {
                 window.location.reload(false);
               }
@@ -120,118 +118,162 @@
                 throw error;
               }
             }
-          },
+          }
 
-          transition_next_page: function(event) {
-            var replace_page = Siv.page.get_page() + Siv.page.get_transition_page_num(event);
-            Siv.page.transition_page(replace_page);
-            Siv.image.update(Siv.page.scroll_top);
-          },
+          function transition_next_page(event) {
+            var replace_page = get_page() + get_transition_page_num(event);
+            transition_page(replace_page);
+            Image.update(scroll_top);
+          }
 
-          transition_previous_page: function(event) {
-            var replace_page = Siv.page.get_page() - Siv.page.get_transition_page_num(event);
+          function transition_previous_page(event) {
+            var replace_page = get_page() - get_transition_page_num(event);
 
             if (replace_page < 1) {
               replace_page = 1;
             }
 
-            Siv.page.transition_page(replace_page);
-            Siv.image.update(Siv.page.scroll_bottom);
-          },
+            transition_page(replace_page);
+            Image.update(scroll_bottom);
+          }
 
-          scroll: function(top) {
+          function scroll(top) {
             window.scrollTo(0, top);
-          },
+          }
 
-          scroll_top: function() {
-            Siv.page.scroll(window.innerHeight);
-          },
+          function scroll_top() {
+            scroll(window.innerHeight);
+          }
 
-          scroll_bottom: function() {
-            Siv.page.scroll(Siv.image.element.height);
-          },
-        },
+          function scroll_bottom() {
+            scroll(Image.element.height);
+          }
 
-        event: {
-          init: function() {
-            Siv.event.set_resize_event_to_window();
-            Siv.event.set_mousemove_event_to_window();
-            Siv.event.set_click_event_to_window();
-            Siv.event.set_keydown_event_to_window();
-            Siv.event.set_popstate_event_to_window();
-            Siv.event.set_load_event_to_image();
+          return {
+            setup:                     setup,
+            get_hash:                  get_hash,
+            get_page:                  get_page,
+            zero_padding_string:       zero_padding_string,
+            get_zero_padding_page:     get_zero_padding_page,
+            hash_check_and_replace:    hash_check_and_replace,
+            get_transition_page_num:   get_transition_page_num,
+            transition_page:           transition_page,
+            transition_next_page:      transition_next_page,
+            transition_previous_page:  transition_previous_page,
+            scroll:                    scroll,
+            scroll_top:                scroll_top,
+            scroll_bottom:             scroll_bottom,
+          };
+        })(),
 
-            delete Siv.event;
-          },
+        Event: (function() {
+          function setup() {
+            set_resize_event_to_window();
+            set_mousemove_event_to_window();
+            set_click_or_keydown_event_to_window();
+            set_popstate_event_to_window();
+            set_load_event_to_image();
+          }
 
-          set_resize_event_to_window: function() {
+          function set_resize_event_to_window() {
             window.addEventListener("resize", function(event) {
-              Siv.image.reset_margin_bottom_and_top();
+              Image.reset_margin_bottom_and_top();
             }, false);
-          },
+          }
 
-          set_mousemove_event_to_window: function() {
+          function check_position_mouse_cursor(event) {
+            if (Object.prototype.toString.call(event.clientX) === "[object Undefined]") {
+              return null;
+            }
+
+            return event.clientX < window.innerWidth / 2;
+          }
+
+          function set_mousemove_event_to_window() {
             window.addEventListener("mousemove", function(event) {
-              if (event.clientX < window.innerWidth / 2) {
-                // カーソルが左半分にある / 左向きカーソル
+              if (check_position_mouse_cursor(event)) {
                 window.document.body.style.cursor = "w-resize";
               }
               else {
-                // カーソルが右半分にある / 右向きカーソル
                 window.document.body.style.cursor = "e-resize";
               }
             }, false);
-          },
+          }
 
-          set_click_event_to_window: function() {
-            window.addEventListener("click", function(event) {
-              if (event.clientX < window.innerWidth / 2) {
-                // 左半分クリック
-                Siv.page.transition_previous_page(event);
-              }
-              else {
-                // 右半分クリック
-                Siv.page.transition_next_page(event);
-              }
-            }, false);
-          },
+          function set_click_or_keydown_event_to_window() {
+            window.addEventListener("keydown", click_or_keydown, false);
+            window.addEventListener("click", click_or_keydown, false);
+          }
 
-          set_keydown_event_to_window: function() {
-            window.addEventListener("keydown", function(event) {
-              // event.key           [Chrome, Firefox, Opera, MS-IE11, MS-Edge25]
-              // event.keyIdentifier [Safari] (.keyIdentifier method is deprecated. However, .key method is not supported in Safari.)
-              var received_key  = event.key || event.keyIdentifier;
+          var next_page_keys = [
+            "Enter",      // [Chrome, Firefox, Safari, Opera, MS-IE11, MS-Edge25]
+            "ArrowRight", // [Chrome, Firefox, Opera]
+            "Right",      // [Safari, MS-IE11, MS-Edge25]
+          ];
 
-              switch (received_key) {
-                case "Enter":     // [Chrome, Firefox, Safari, Opera, MS-IE11, MS-Edge25]
-                case "ArrowRight":// [Chrome, Firefox, Opera]
-                case "Right":     // [Safari, MS-IE11, MS-Edge25]
-                  Siv.page.transition_next_page(event);
-                  break;
-                case "ArrowLeft": // [Chrome, Firefox, Opera]
-                case "Left":      // [Safari, MS-IE11, MS-Edge25]
-                  Siv.page.transition_previous_page(event);
-                  break;
-              }
-            }, false);
-          },
+          var previous_page_keys = [
+            "ArrowLeft", // [Chrome, Firefox, Opera]
+            "Left",      // [Safari, MS-IE11, MS-Edge25]
+          ];
 
-          set_popstate_event_to_window: function() {
+          function click_or_keydown(event) {
+            // event.key           [Chrome, Firefox, Opera, MS-IE11, MS-Edge25]
+            // event.keyIdentifier [Safari] (.keyIdentifier method is deprecated. However, .key method is not supported in Safari.)
+            var received_key = (event.key || event.keyIdentifier);
+
+            if (next_page_keys.indexOf(received_key) >= 0 || check_position_mouse_cursor(event) === false) {
+              Page.transition_next_page(event);
+            }
+            else if (previous_page_keys.indexOf(received_key) >= 0 || check_position_mouse_cursor(event) === true) {
+              Page.transition_previous_page(event);
+            }
+          }
+
+          function set_popstate_event_to_window() {
             window.addEventListener("popstate", function(event) {
-              Siv.page.hash_check_and_replace();
-              Siv.image.update(Siv.page.scroll_top);
+              Page.hash_check_and_replace();
+              Image.update(Page.scroll_top);
             }, false);
-          },
+          }
 
-          set_load_event_to_image: function() {
-            Siv.image.element.addEventListener("load", function(event) {
-              Siv.image.call_function_after_image_load();
+          function set_load_event_to_image() {
+            Image.element.addEventListener("load", function(event) {
+              Image.call_function_after_image_load();
             }, false);
-          },
-        }
+          }
+
+          return {
+            setup:                                setup,
+            set_resize_event_to_window:           set_resize_event_to_window,
+            check_position_mouse_cursor:          check_position_mouse_cursor,
+            set_mousemove_event_to_window:        set_mousemove_event_to_window,
+            set_click_or_keydown_event_to_window: set_click_or_keydown_event_to_window,
+            next_page_keys:                       next_page_keys,
+            previous_page_keys:                   previous_page_keys,
+            click_or_keydown:                     click_or_keydown,
+            set_popstate_event_to_window:         set_popstate_event_to_window,
+            set_load_event_to_image:              set_load_event_to_image,
+          };
+        })(),
+
+        Setup: function() {
+          Image.setup();
+          Event.setup();
+          Page.setup();
+
+          window.removeEventListener("DOMContentLoaded", Setup, false);
+        },
       };
 
-      window.addEventListener("DOMContentLoaded", Siv.initialize, false);
+      var Setting = Siv.Setting;
+      var Image   = Siv.Image;
+      var Page    = Siv.Page;
+      var Event   = Siv.Event;
+      var Setup   = Siv.Setup;
+
+      // window.Siv = Siv;
+
+      window.addEventListener("DOMContentLoaded", Setup, false);
     })(window);
   </script>
 </head>

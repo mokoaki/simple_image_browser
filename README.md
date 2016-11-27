@@ -30,8 +30,8 @@ This is image viewerrrrrrrrrrrrrrr
 
 設定はココだけ
 
-```javascript
-setting: {
+```js
+Setting: {
   // e.g.
   // ./path/to/file_name_001.jpg
   file_path:         "./path/to/file_name_",
