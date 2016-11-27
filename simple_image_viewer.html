@@ -76,19 +76,15 @@
           },
 
           zero_padding_string: function() {
-            return Siv.page.zero_padding_string.cache || Siv.page.generate_zero_padding_string();
-          },
-
-          generate_zero_padding_string: function() {
             var result = "";
 
             for (var i = 0; i < Siv.setting.zero_suppress_num; i++) {
               result += "0";
             }
 
-            Siv.page.zero_padding_string.cache = result;
-
-            delete Siv.page.generate_zero_padding_string;
+            Siv.page.zero_padding_string = function() {
+              return result;
+            };
 
             return result;
           },
