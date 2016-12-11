@@ -180,7 +180,9 @@
           function set_resize_event_to_window() {
             window.addEventListener("resize", function(event) {
               Image.reset_margin_bottom_and_top();
-            }, false);
+
+              event.stopPropagation();
+            }, true);
           }
 
           function check_position_mouse_cursor(event) {
@@ -199,12 +201,14 @@
               else {
                 window.document.body.style.cursor = "e-resize";
               }
-            }, false);
+
+              event.stopPropagation();
+            }, true);
           }
 
           function set_click_or_keydown_event_to_window() {
-            window.addEventListener("keydown", click_or_keydown, false);
-            window.addEventListener("click", click_or_keydown, false);
+            window.addEventListener("keydown", click_or_keydown, true);
+            window.addEventListener("click", click_or_keydown, true);
           }
 
           var next_page_keys = [
@@ -229,19 +233,25 @@
             else if (previous_page_keys.indexOf(received_key) >= 0 || check_position_mouse_cursor(event) === true) {
               Page.transition_previous_page(event);
             }
+
+            event.stopPropagation();
           }
 
           function set_popstate_event_to_window() {
             window.addEventListener("popstate", function(event) {
               Page.hash_check_and_replace();
               Image.update(Page.scroll_top);
-            }, false);
+
+              event.stopPropagation();
+            }, true);
           }
 
           function set_load_event_to_image() {
             Image.element.addEventListener("load", function(event) {
               Image.call_function_after_image_load();
-            }, false);
+
+              event.stopPropagation();
+            }, true);
           }
 
           return {
@@ -263,7 +273,9 @@
           Event.setup();
           Page.setup();
 
-          window.removeEventListener("DOMContentLoaded", Setup, false);
+          window.removeEventListener("DOMContentLoaded", Setup, true);
+
+          event.stopPropagation();
         },
       };
 
@@ -275,7 +287,7 @@
 
       // window.Siv = Siv;
 
-      window.addEventListener("DOMContentLoaded", Setup, false);
+      window.addEventListener("DOMContentLoaded", Setup, true);
     })(window);
   </script>
 </body>
