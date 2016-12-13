@@ -14,7 +14,7 @@ This is image viewerrrrrrrrrrrrrrr
 
 俺がメインで使っているのですぐバグに気付くと思われるブラウザ
 
-- Chrome 54
+- Chrome 55
 
 ## Best effort support browsers
 
@@ -22,7 +22,7 @@ This is image viewerrrrrrrrrrrrrrr
 
 - Firefox 50
 - Safari 10
-- Opera 41
+- Opera 42
 - MS-IE 11
 - MS-Edge 25
 
