@@ -1,6 +1,5 @@
 # 俺用 simple_image_viewer
-
-This is image viewerrrrrrrrrrrrrrr
+This is image viewer.
 
 これは画像ビューア（そのまんま）です<br>
 欲しかった機能は
@@ -8,16 +7,14 @@ This is image viewerrrrrrrrrrrrrrr
 - 画像は表示領域の横幅にフィットして拡大表示できる
 - 画像最上部が表示領域の最下部、画像最下部が表示領域の最上部までスクロールできる
 
-ただそれだけなのに、世の中の画像ビューアはそんな簡単な事も出来ないくせに要らない機能ばっかり実装しやがって**そびえ立つクソしか無い**ので自作したのです
+ただそれだけなのに、世の中の画像ビューアはそんな簡単な事も出来ないくせに要らない機能ばっかり実装しやがってそびえ立つクソしか無いので自作したのです
 
 ## Support browsers
-
 俺がメインで使っているのですぐバグに気付くと思われるブラウザ
 
 - Chrome 55
 
 ## Best effort support browsers
-
 それなりのブラウザ
 
 - Firefox 50
@@ -26,22 +23,31 @@ This is image viewerrrrrrrrrrrrrrr
 - MS-IE 11
 - MS-Edge 25
 
-## Edit Setting
+## Minimum required files
+通常使用で最低限必要なファイル
 
+- simple_image_viewer.html
+- lib/siv.js
+- css/siv.css
+
+lib/siv.js は src/siv.js をbabelったものです
+
+## Edit Setting
 設定はココだけ
 
 ```js
-Setting: {
+# lib/siv.js
+
+var Setting = Siv.Setting = {
   // e.g.
   // ./path/to/file_name_001.jpg
-  file_path:         "./path/to/file_name_",
+  file_path: "./path/to/file_name_",
   zero_suppress_num: 3,
-  file_extension:    ".jpg",
-},
+  file_extension: ".jpg"
+};
 ```
 
 ## Next page
-
 次のページ
 
 - Click right side of the window
@@ -50,7 +56,6 @@ Setting: {
 - エンターキーか右カーソルキーを押す
 
 ## Previous page
-
 前のページ
 
 - Click left side of the window
@@ -59,18 +64,15 @@ Setting: {
 - 左カーソルキーを押す
 
 ## Accelerator
-
 もっと先へ加速したくはないか、少年
 
 - MetaKey, ShiftKey, AltKey, CtrlKey it will go 10 pages Press
 - 適当なそれっぽいキーを押していると10ページ遷移します
 
 ## Test
-
 テスト
 
 - WIP
-- 各プラットフォーム・各ブラウザで自動テストを行う実験中
 
 ## License
 MIT
