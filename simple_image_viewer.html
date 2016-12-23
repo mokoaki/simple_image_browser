@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <link href="./css/siv.css" rel="stylesheet" media="all">
 </head>
 <body>
   <script>
@@ -23,7 +24,6 @@
           function setup() {
             element = window.document.createElement("img");
 
-            element.style.width = "100%";
             window.document.body.appendChild(element);
             Image.element = element;
 
@@ -49,12 +49,6 @@
 
         Page: (function() {
           function setup() {
-            (function(style) {
-              style.margin         = "0px";
-              style.background     = "linear-gradient( -45deg, #dddddd 25%, #eeeeee 25%, #eeeeee 50%, #dddddd 50%, #dddddd 75%, #eeeeee 75%, #eeeeee )";
-              style.backgroundSize = "100px 100px";
-            })(window.document.body.style);
-
             hash_check_and_replace();
             Image.update(scroll_top);
           }
@@ -196,10 +190,10 @@
           function set_mousemove_event_to_window() {
             window.addEventListener("mousemove", function(event) {
               if (check_position_mouse_cursor(event)) {
-                window.document.body.style.cursor = "w-resize";
+                window.document.body.className = "w_resize";
               }
               else {
-                window.document.body.style.cursor = "e-resize";
+                window.document.body.className = "e_resize";
               }
 
               event.stopPropagation();

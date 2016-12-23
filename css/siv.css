@@ -1,0 +1,17 @@
+body {
+  margin: 0px;
+  background: linear-gradient( -45deg, #dddddd 25%, #eeeeee 25%, #eeeeee 50%, #dddddd 50%, #dddddd 75%, #eeeeee 75%, #eeeeee );
+  background-size: 100px 100px;
+}
+
+body.w_resize {
+  cursor: w-resize;
+}
+
+body.e_resize {
+  cursor: e-resize;
+}
+
+img {
+  width: 100%;
+}
