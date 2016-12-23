@@ -27,7 +27,7 @@
             window.document.body.appendChild(element);
             Image.element = element;
 
-            reset_margin_bottom_and_top();
+            reset_margin();
           }
 
           function update(function_after_image_load) {
@@ -35,22 +35,36 @@
             element.src = Setting.file_path + Page.get_zero_padding_page() + Setting.file_extension;
           }
 
-          function reset_margin_bottom_and_top() {
+          function reset_margin() {
             element.style.marginTop    = window.innerHeight + "px";
             element.style.marginBottom = window.innerHeight + "px";
           }
 
           return {
-            setup:                       setup,
-            update:                      update,
-            reset_margin_bottom_and_top: reset_margin_bottom_and_top,
+            element:      element,
+            setup:        setup,
+            update:       update,
+            reset_margin: reset_margin,
           };
         })(),
 
         Page: (function() {
+          var zero_padding_string;
+
           function setup() {
+            set_zero_padding_string();
             hash_check_and_replace();
             Image.update(scroll_top);
+          }
+
+          function set_zero_padding_string() {
+            var result = "";
+
+            for (var i = 0; i < Setting.zero_suppress_num; i++) {
+              result += "0";
+            }
+
+            zero_padding_string = result;
           }
 
           function get_hash() {
@@ -67,22 +81,8 @@
             return page;
           }
 
-          function zero_padding_string() {
-            var result = "";
-
-            for (var i = 0; i < Setting.zero_suppress_num; i++) {
-              result += "0";
-            }
-
-            Page.zero_padding_string = function() {
-              return result;
-            };
-
-            return result;
-          }
-
           function get_zero_padding_page() {
-            return (zero_padding_string() + get_page()).slice(-Setting.zero_suppress_num);
+            return (zero_padding_string + get_page()).slice(-Setting.zero_suppress_num);
           }
 
           function hash_check_and_replace() {
@@ -149,6 +149,7 @@
             setup:                     setup,
             get_hash:                  get_hash,
             get_page:                  get_page,
+            set_zero_padding_string:   set_zero_padding_string,
             zero_padding_string:       zero_padding_string,
             get_zero_padding_page:     get_zero_padding_page,
             hash_check_and_replace:    hash_check_and_replace,
@@ -173,7 +174,7 @@
 
           function set_resize_event_to_window() {
             window.addEventListener("resize", function(event) {
-              Image.reset_margin_bottom_and_top();
+              Image.reset_margin();
 
               event.stopPropagation();
             }, true);
