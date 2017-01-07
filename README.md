@@ -38,7 +38,7 @@ lib/siv.js は src/siv.js をbabelったものです
 ```js
 # lib/siv.js
 
-var Setting = Siv.Setting = {
+var Setting = {
   // e.g.
   // ./path/to/file_name_001.jpg
   file_path: "./path/to/file_name_",

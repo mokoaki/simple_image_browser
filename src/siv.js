@@ -1,17 +1,16 @@
 (() => {
   "use strict";
 
-  const Siv = {};
-  const Setting = Siv.Setting = {
+  const Setting = {
     // e.g.
     // ./path/to/file_name_001.jpg
-    file_path:         "./path/to/file_name_",
+    file_path: "./path/to/file_name_",
     zero_suppress_num: 3,
     file_extension:    ".jpg",
   };
 
-  const Image = Siv.Image = (() => {
-    let element = document.createElement("img");
+  const Image = (() => {
+    const element = document.createElement("img");
 
     const setup = () => {
       document.body.appendChild(element);
@@ -37,7 +36,7 @@
     };
   })();
 
-  const Page = Siv.Page = (() => {
+  const Page = (() => {
     const setup = () => {
       hash_check_and_replace();
       Image.update(scroll_top);
@@ -151,7 +150,7 @@
     };
   })();
 
-  const Event = Siv.Event = (() => {
+  const Event = (() => {
     const setup = () => {
       set_resize_event_to_window();
       set_mousemove_event_to_window();
@@ -251,7 +250,7 @@
     };
   })();
 
-  const Setup = Siv.Setup = (e) => {
+  const Setup = (e) => {
     Image.setup();
     Event.setup();
     Page.setup();
@@ -261,7 +260,13 @@
     e.stopPropagation();
   };
 
-  // window.Siv = Siv;
+  // window.Siv = {
+  //   Setting: Setting,
+  //   Image:   Image,
+  //   Page:    Page,
+  //   Event:   Event,
+  //   Setup:   Setup,
+  // };
 
   document.addEventListener("DOMContentLoaded", Setup, true);
 })();

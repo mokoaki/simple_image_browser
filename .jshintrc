@@ -1,4 +1,5 @@
 {
   "esversion": 6,
-  "browser": true
+  "browser": true,
+  "devel": true // console、alertを許可
 }
