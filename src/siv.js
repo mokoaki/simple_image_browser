@@ -160,7 +160,7 @@
     };
 
     const set_resize_event_to_window = () => {
-      document.addEventListener("resize", (e) => {
+      window.addEventListener("resize", (e) => {
         Image.reset_margin();
 
         e.stopPropagation();
