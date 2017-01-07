@@ -56,7 +56,7 @@
     })();
 
     const get_hash = () => {
-      return window.location.hash.substring(1);
+      return window.location.hash.slice(1);
     };
 
     const get_page = () => {
