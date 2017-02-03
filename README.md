@@ -12,12 +12,12 @@ This is image viewer.
 ## Support browsers
 俺がメインで使っているのですぐバグに気付くと思われるブラウザ
 
-- Chrome 55
+- Chrome 56
 
 ## Best effort support browsers
 それなりのブラウザ
 
-- Firefox 50
+- Firefox 51
 - Safari 10
 - Opera 42
 - MS-IE 11
