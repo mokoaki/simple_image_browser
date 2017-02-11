@@ -19,7 +19,7 @@ This is image viewer.
 
 - Firefox 51
 - Safari 10
-- Opera 42
+- Opera 43
 - MS-IE 11
 - MS-Edge 25
 
