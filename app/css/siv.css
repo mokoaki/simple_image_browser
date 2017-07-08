@@ -1,5 +1,5 @@
 body {
-  margin: 0px;
+  margin: 0;
   background: linear-gradient( -45deg, #dddddd 25%, #eeeeee 25%, #eeeeee 50%, #dddddd 50%, #dddddd 75%, #eeeeee 75%, #eeeeee );
   background-size: 100px 100px;
 }
@@ -13,5 +13,6 @@ body.e_resize {
 }
 
 img {
+  border-style: none;
   width: 100%;
 }

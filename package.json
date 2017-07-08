@@ -4,7 +4,7 @@
   "description": "image viewer",
   "main": "simple_image_viewer.html",
   "scripts": {
-    "build": "babel src/siv.js -o lib/siv.js"
+    "build": "babel src/siv.js -o app/js/siv.js"
   },
   "repository": {
     "type": "git",

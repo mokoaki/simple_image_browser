@@ -3,10 +3,11 @@
 
   const Setting = {
     // e.g.
-    // ./path/to/file_name_001.jpg
-    file_path: "./path/to/file_name_",
+    // path/to/file_name_001.jpg
+    // ./images/irasutoya_001.jpg
+    file_path: "./images/irasutoya_",
     zero_suppress_num: 3,
-    file_extension:    ".jpg",
+    file_extension: ".jpg",
   };
 
   const Image = (() => {
