@@ -13,7 +13,7 @@ This is image viewer.
 ## Support browsers
 俺がメインで使っているのですぐバグに気付くと思われるブラウザ
 
-- Chrome 60
+- Chrome 61
 
 ## Best effort support browsers
 それなりのブラウザ
@@ -50,16 +50,16 @@ var Setting = {
 };
 ```
 
-## Next page
-次のページ
+## Show next page
+次のページを表示
 
 - Click right side of the window
 - Push enter key or right arrow key
 - ウィンドウの右の方をクリックする
 - エンターキーか右カーソルキーを押す
 
-## Previous page
-前のページ
+## Show previous page
+前のページを表示
 
 - Click left side of the window
 - Push left arrow key
