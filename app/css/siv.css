@@ -16,3 +16,11 @@ img {
   border-style: none;
   width: 100%;
 }
+
+body {
+  /*ダブルクリックやCTRL-Aで選択状態になり、リロードしないと選択を解除できない状況対応 選択不可能にする*/
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
