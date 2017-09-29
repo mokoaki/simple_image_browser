@@ -18,9 +18,9 @@ This is image viewer.
 ## Best effort support browsers
 それなりのブラウザ
 
-- Firefox 55
+- Firefox 56
 - Safari 10
-- Opera 47
+- Opera 48
 - MS-IE 11
 - MS-Edge 25
 
