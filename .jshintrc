@@ -1,5 +1,4 @@
 {
   "esversion": 6,
-  "browser": true,
-  "devel": true // console、alertを許可
+  "browser": true
 }

@@ -1,158 +1,152 @@
-"use strict";
-
-(function () {
+(() => {
   "use strict";
 
-  var Setting = {
+  const Setting = {
     // e.g.
     // path/to/file_name_001.jpg
     // ./images/irasutoya_001.jpg
     file_path: "./images/irasutoya_",
     zero_suppress_num: 3,
-    file_extension: ".jpg"
+    file_extension: ".jpg",
   };
 
-  var Image = function () {
-    var element = document.createElement("img");
+  const Image = (() => {
+    const element = document.createElement("img");
 
-    var setup = function setup() {
+    const setup = () => {
       document.body.appendChild(element);
 
       reset_margin();
     };
 
-    var update = function update(function_after_image_load) {
+    const update = (function_after_image_load) => {
       Image.call_function_after_image_load = function_after_image_load;
       element.src = Setting.file_path + Page.get_zero_padding_page() + Setting.file_extension;
     };
 
-    var reset_margin = function reset_margin() {
-      element.style.marginTop = window.innerHeight + "px";
+    const reset_margin = () => {
+      element.style.marginTop    = window.innerHeight + "px";
       element.style.marginBottom = window.innerHeight + "px";
     };
 
     return {
-      element: element,
-      setup: setup,
-      update: update,
-      reset_margin: reset_margin
+      element:      element,
+      setup:        setup,
+      update:       update,
+      reset_margin: reset_margin,
     };
-  }();
+  })();
 
-  var Page = function () {
-    var setup = function setup() {
+  const Page = (() => {
+    const setup = () => {
       hash_check_and_replace();
       Image.update(scroll_top);
     };
 
-    var zero_padding_string = function () {
-      var result = "";
+    const zero_padding_string = (() => {
+      const result = Math.pow(10, Setting.zero_suppress_num).toString(10).slice(1);
 
-      for (var i = 0; i < Setting.zero_suppress_num; i++) {
-        result += "0";
-      }
-
-      return function () {
+      return () => {
         return result;
       };
-    }();
+    })();
 
-    var get_hash = function get_hash() {
+    const get_url_hash = () => {
       return window.location.hash.slice(1);
     };
 
-    var get_page = function get_page() {
-      var page = parseInt(get_hash(), 10);
-
-      if (isFinite(page) === false || page < 1) {
-        page = 1;
-      }
+    const get_page_num = (url_hash) => {
+      const temp_page = parseInt(url_hash, 10);
+      const page = (isFinite(temp_page) === false || temp_page < 1) ? 1 : temp_page;
 
       return page;
     };
 
-    var get_zero_padding_page = function get_zero_padding_page() {
-      return (zero_padding_string() + get_page()).slice(-Setting.zero_suppress_num);
+    const get_zero_padding_page = () => {
+      const url_hash = get_url_hash();
+      return (zero_padding_string() + get_page_num(url_hash).toString(10)).slice(-Setting.zero_suppress_num);
     };
 
-    var hash_check_and_replace = function hash_check_and_replace() {
-      var page = get_page().toString(10);
+    const hash_check_and_replace = () => {
+      const url_hash = get_url_hash();
+      const page = get_page_num(url_hash).toString(10);
 
-      if (get_hash() !== page) {
-        var page_str = "#" + page;
+      if (url_hash !== page) {
+        const page_str = "#" + page;
         window.history.replaceState(null, page_str, page_str);
       }
     };
 
-    var get_transition_page_num = function get_transition_page_num(e) {
-      return e.altKey || e.ctrlKey || e.metaKey || e.shiftKey ? 10 : 1;
+    const get_transition_page_num = (event) => {
+      return (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) ? 10 : 1;
     };
 
-    var transition_page = function transition_page(page) {
+    const transition_page = (page) => {
       try {
-        var page_str = "#" + page;
+        const page_str = "#" + page;
         window.history.pushState(null, page_str, page_str);
-      } catch (error) {
+      }
+      catch(error) {
         // Nosy security message from safari ! ヽ(`Д´)ﾉ
         // SecurityError (DOM Exception 18): Attempt to use history.pushState() more than 100 times per 30.000000 seconds
         if (error.code === 18) {
           window.location.reload(false);
-        } else {
+        }
+        else {
           console.dir(error);
-          alert(error);
           throw error;
         }
       }
     };
 
-    var transition_next_page = function transition_next_page(e) {
-      var replace_page = get_page() + get_transition_page_num(e);
+    const transition_next_page = (event) => {
+      const url_hash = get_url_hash();
+      const replace_page = get_page_num(url_hash) + get_transition_page_num(event);
+
       transition_page(replace_page);
       Image.update(scroll_top);
     };
 
-    var transition_previous_page = function transition_previous_page(e) {
-      var replace_page = get_page() - get_transition_page_num(e);
-
-      if (replace_page < 1) {
-        replace_page = 1;
-      }
+    const transition_previous_page = (event) => {
+      const url_hash = get_url_hash();
+      const temp_replace_page = get_page_num(url_hash) - get_transition_page_num(event);
+      const replace_page = Math.max(temp_replace_page, 1);
 
       transition_page(replace_page);
       Image.update(scroll_bottom);
     };
 
-    var scroll = function scroll(top) {
+    const scroll = (top) => {
       window.scrollTo(0, top);
     };
 
-    var scroll_top = function scroll_top() {
+    const scroll_top = () => {
       scroll(window.innerHeight);
     };
 
-    var scroll_bottom = function scroll_bottom() {
+    const scroll_bottom = () => {
       scroll(Image.element.height);
     };
 
     return {
-      setup: setup,
-      get_hash: get_hash,
-      get_page: get_page,
-      zero_padding_string: zero_padding_string,
-      get_zero_padding_page: get_zero_padding_page,
-      hash_check_and_replace: hash_check_and_replace,
-      get_transition_page_num: get_transition_page_num,
-      transition_page: transition_page,
-      transition_next_page: transition_next_page,
-      transition_previous_page: transition_previous_page,
-      scroll: scroll,
-      scroll_top: scroll_top,
-      scroll_bottom: scroll_bottom
+      setup:                     setup,
+      get_url_hash:              get_url_hash,
+      get_page_num:              get_page_num,
+      zero_padding_string:       zero_padding_string,
+      get_zero_padding_page:     get_zero_padding_page,
+      hash_check_and_replace:    hash_check_and_replace,
+      get_transition_page_num:   get_transition_page_num,
+      transition_page:           transition_page,
+      transition_next_page:      transition_next_page,
+      transition_previous_page:  transition_previous_page,
+      scroll:                    scroll,
+      scroll_top:                scroll_top,
+      scroll_bottom:             scroll_bottom,
     };
-  }();
+  })();
 
-  var Event = function () {
-    var setup = function setup() {
+  const Event = (() => {
+    const setup = () => {
       set_resize_event_to_window();
       set_mousemove_event_to_window();
       set_click_or_keydown_event_to_window();
@@ -160,99 +154,101 @@
       set_load_event_to_image();
     };
 
-    var set_resize_event_to_window = function set_resize_event_to_window() {
-      window.addEventListener("resize", function (e) {
+    const set_resize_event_to_window = () => {
+      window.addEventListener("resize", (event) => {
         Image.reset_margin();
 
-        e.stopPropagation();
+        event.stopPropagation();
       }, true);
     };
 
-    var check_position_mouse_cursor = function check_position_mouse_cursor(e) {
-      if (Object.prototype.toString.call(e.clientX) === "[object Undefined]") {
+    const check_position_mouse_cursor = (event) => {
+      if (Object.prototype.toString.call(event.clientX) === "[object Undefined]") {
         return null;
       }
 
-      return e.clientX < window.innerWidth / 2;
+      return event.clientX < window.innerWidth / 2;
     };
 
-    var set_mousemove_event_to_window = function set_mousemove_event_to_window() {
-      document.addEventListener("mousemove", function (e) {
-        if (check_position_mouse_cursor(e)) {
+    const set_mousemove_event_to_window = () => {
+      document.addEventListener("mousemove", (event) => {
+        if (check_position_mouse_cursor(event)) {
           document.body.className = "w_resize";
-        } else {
+        }
+        else {
           document.body.className = "e_resize";
         }
 
-        e.stopPropagation();
+        event.stopPropagation();
       }, true);
     };
 
-    var set_click_or_keydown_event_to_window = function set_click_or_keydown_event_to_window() {
+    const set_click_or_keydown_event_to_window = () => {
       document.addEventListener("keydown", click_or_keydown, true);
       document.addEventListener("click", click_or_keydown, true);
     };
 
-    var next_page_keys = ["Enter", // [Chrome, Firefox, Safari, Opera, MS-IE11, MS-Edge25]
-    "ArrowRight", // [Chrome, Firefox, Opera]
-    "Right"];
+    const NEXT_PAGE_KEYS = [
+      "Enter",      // [Chrome, Firefox, Safari, Opera, MS-IE11, MS-Edge25]
+      "ArrowRight", // [Chrome, Firefox, Safari, Opera]
+      "Right",      // [MS-IE11, MS-Edge25]
+    ];
 
-    var previous_page_keys = ["ArrowLeft", // [Chrome, Firefox, Opera]
-    "Left"];
+    const PREVIOUS_PAGE_KEYS = [
+      "ArrowLeft", // [Chrome, Firefox, Safari, Opera]
+      "Left",      // [MS-IE11, MS-Edge25]
+    ];
 
-    var click_or_keydown = function click_or_keydown(e) {
-      // e.key           [Chrome, Firefox, Opera, MS-IE11, MS-Edge25]
-      // e.keyIdentifier [Safari] (.keyIdentifier method is deprecated. However, .key method is not supported in Safari.)
-      var received_key = e.key || e.keyIdentifier;
+    const click_or_keydown = (event) => {
+      const received_key = event.key;
 
-      if (next_page_keys.indexOf(received_key) >= 0 || check_position_mouse_cursor(e) === false) {
-        Page.transition_next_page(e);
-      } else if (previous_page_keys.indexOf(received_key) >= 0 || check_position_mouse_cursor(e) === true) {
-        Page.transition_previous_page(e);
+      if (NEXT_PAGE_KEYS.includes(received_key) || check_position_mouse_cursor(event) === false) {
+        Page.transition_next_page(event);
+      }
+      else if (PREVIOUS_PAGE_KEYS.includes(received_key) || check_position_mouse_cursor(event) === true) {
+        Page.transition_previous_page(event);
       }
 
-      e.stopPropagation();
+      event.stopPropagation();
     };
 
-    var set_popstate_event_to_window = function set_popstate_event_to_window() {
-      document.addEventListener("popstate", function (e) {
+    const set_popstate_event_to_window = () => {
+      document.addEventListener("popstate", (event) => {
         Page.hash_check_and_replace();
         Image.update(Page.scroll_top);
 
-        e.stopPropagation();
+        event.stopPropagation();
       }, true);
     };
 
-    var set_load_event_to_image = function set_load_event_to_image() {
-      Image.element.addEventListener("load", function (e) {
+    const set_load_event_to_image = () => {
+      Image.element.addEventListener("load", (event) => {
         Image.call_function_after_image_load();
 
-        e.stopPropagation();
+        event.stopPropagation();
       }, true);
     };
 
     return {
-      setup: setup,
-      set_resize_event_to_window: set_resize_event_to_window,
-      check_position_mouse_cursor: check_position_mouse_cursor,
-      set_mousemove_event_to_window: set_mousemove_event_to_window,
+      setup:                                setup,
+      set_resize_event_to_window:           set_resize_event_to_window,
+      check_position_mouse_cursor:          check_position_mouse_cursor,
+      set_mousemove_event_to_window:        set_mousemove_event_to_window,
       set_click_or_keydown_event_to_window: set_click_or_keydown_event_to_window,
-      next_page_keys: next_page_keys,
-      previous_page_keys: previous_page_keys,
-      click_or_keydown: click_or_keydown,
-      set_popstate_event_to_window: set_popstate_event_to_window,
-      set_load_event_to_image: set_load_event_to_image
+      click_or_keydown:                     click_or_keydown,
+      set_popstate_event_to_window:         set_popstate_event_to_window,
+      set_load_event_to_image:              set_load_event_to_image,
     };
-  }();
+  })();
 
-  var Setup = function Setup(e) {
+  const Setup = (event) => {
     Image.setup();
     Event.setup();
     Page.setup();
 
     document.removeEventListener("DOMContentLoaded", Setup, true);
 
-    e.stopPropagation();
+    event.stopPropagation();
   };
 
   // window.Siv = {
