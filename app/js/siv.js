@@ -172,12 +172,7 @@
 
     const set_mousemove_event_to_window = () => {
       document.addEventListener("mousemove", (event) => {
-        if (check_position_mouse_cursor(event)) {
-          document.body.className = "w_resize";
-        }
-        else {
-          document.body.className = "e_resize";
-        }
+        document.body.className = check_position_mouse_cursor(event) ? "w_resize" : "e_resize";
 
         event.stopPropagation();
       }, true);
