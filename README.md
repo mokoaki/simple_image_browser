@@ -16,10 +16,10 @@ This is image viewer.
 
 上の方ほどサポートされてそうなブラウザ
 
-- Chrome 61
+- Chrome 62
 - Firefox 56
-- Safari 10
-- Opera 48
+- Safari 11
+- Opera 49
 - MS-IE 11
 - MS-Edge 25
 
