@@ -55,25 +55,23 @@
       return window.location.hash.slice(1);
     };
 
-    const get_page_num = (url_hash) => {
+    const get_trust_page_num = (url_hash) => {
       const temp_page = parseInt(url_hash, 10);
-      const page = (isFinite(temp_page) === false || temp_page < 1) ? 1 : temp_page;
-
-      return page;
+      return (isFinite(temp_page) === false || temp_page < 1) ? 1 : temp_page;
     };
 
     const get_zero_padding_page = () => {
-      const url_hash = get_url_hash();
-      return (zero_padding_string() + get_page_num(url_hash).toString(10)).slice(-Setting.zero_suppress_num);
+      return (zero_padding_string() + get_trust_page_num(current_page_hash_num).toString(10)).slice(-Setting.zero_suppress_num);
     };
 
     const hash_check_and_replace = () => {
       const url_hash = get_url_hash();
-      const page = get_page_num(url_hash).toString(10);
+      const page = get_trust_page_num(url_hash);
 
-      if (url_hash !== page) {
-        const page_str = "#" + page;
-        window.history.replaceState(null, page_str, page_str);
+      current_page_hash_num = page;
+
+      if (url_hash !== page.toString(10)) {
+        replace_url_hash(page);
       }
     };
 
@@ -81,38 +79,41 @@
       return (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) ? 10 : 1;
     };
 
-    const transition_page = (page) => {
-      try {
-        const page_str = "#" + page;
-        window.history.pushState(null, page_str, page_str);
+    let current_page_hash_num;
+    let rewrite_hash_timeout_flg = false;
+
+    const replace_url_hash = (page) => {
+      current_page_hash_num = page;
+
+      if (rewrite_hash_timeout_flg === true) {
+        return;
       }
-      catch(error) {
-        // Nosy security message from safari ! ヽ(`Д´)ﾉ
-        // SecurityError (DOM Exception 18): Attempt to use history.pushState() more than 100 times per 30.000000 seconds
-        if (error.code === 18) {
-          window.location.reload(false);
-        }
-        else {
-          console.dir(error);
-          throw error;
-        }
-      }
+
+      rewrite_hash_timeout_flg = true;
+
+      setTimeout(replace_url_hash_set_timeout, 300); // 30000(ms) / 100(pushState)
+    };
+
+    const replace_url_hash_set_timeout = () => {
+      const page_str = "#" + current_page_hash_num.toString(10);
+
+      window.history.pushState(null, page_str, page_str);
+
+      rewrite_hash_timeout_flg = false;
     };
 
     const transition_next_page = (event) => {
-      const url_hash = get_url_hash();
-      const replace_page = get_page_num(url_hash) + get_transition_page_num(event);
+      const replace_page = get_trust_page_num(current_page_hash_num) + get_transition_page_num(event);
 
-      transition_page(replace_page);
+      replace_url_hash(replace_page);
       Image.update(scroll_top);
     };
 
     const transition_previous_page = (event) => {
-      const url_hash = get_url_hash();
-      const temp_replace_page = get_page_num(url_hash) - get_transition_page_num(event);
+      const temp_replace_page = get_trust_page_num(current_page_hash_num) - get_transition_page_num(event);
       const replace_page = Math.max(temp_replace_page, 1);
 
-      transition_page(replace_page);
+      replace_url_hash(replace_page);
       Image.update(scroll_bottom);
     };
 
@@ -129,19 +130,10 @@
     };
 
     return {
-      setup:                     setup,
-      get_url_hash:              get_url_hash,
-      get_page_num:              get_page_num,
-      zero_padding_string:       zero_padding_string,
-      get_zero_padding_page:     get_zero_padding_page,
-      hash_check_and_replace:    hash_check_and_replace,
-      get_transition_page_num:   get_transition_page_num,
-      transition_page:           transition_page,
-      transition_next_page:      transition_next_page,
-      transition_previous_page:  transition_previous_page,
-      scroll:                    scroll,
-      scroll_top:                scroll_top,
-      scroll_bottom:             scroll_bottom,
+      setup:                    setup,
+      get_zero_padding_page:    get_zero_padding_page,
+      transition_next_page:     transition_next_page,
+      transition_previous_page: transition_previous_page,
     };
   })();
 
@@ -225,14 +217,7 @@
     };
 
     return {
-      setup:                                setup,
-      set_resize_event_to_window:           set_resize_event_to_window,
-      check_position_mouse_cursor:          check_position_mouse_cursor,
-      set_mousemove_event_to_window:        set_mousemove_event_to_window,
-      set_click_or_keydown_event_to_window: set_click_or_keydown_event_to_window,
-      click_or_keydown:                     click_or_keydown,
-      set_popstate_event_to_window:         set_popstate_event_to_window,
-      set_load_event_to_image:              set_load_event_to_image,
+      setup: setup,
     };
   })();
 

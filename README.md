@@ -1,8 +1,8 @@
 # 俺用 simple image viewer
 
-This is image viewer.
+This is the image viewer to use the web browser.
 
-これは画像ビューアです
+これはブラウザで使う画像ビューアです
 
 私が欲しかった機能は
 
@@ -16,10 +16,10 @@ This is image viewer.
 
 上の方ほどサポートされてそうなブラウザ
 
-- Chrome 62
-- Firefox 56
-- Safari 11
-- Opera 49
+- Chrome 62.0.3202.94
+- Firefox 57.0.1
+- Safari 11.0.1 (13604.3.5)
+- Opera 49.0.2725.39
 - MS-IE 11
 - MS-Edge 25
 
@@ -32,7 +32,7 @@ This is image viewer.
   - js/siv.js
   - css/siv.css
 
-## Edit Setting
+## Setting
 
 設定はココだけ 画像ファイルへのパス、連番の桁数、拡張子を変更する
 
@@ -71,7 +71,7 @@ var Setting = {
 
 もっと先へ加速したくはないか、少年
 
-- MetaKey, ShiftKey, AltKey, CtrlKey it will go 10 pages Press
+- Move 10 pages if hold down MetaKey, ShiftKey, AltKey, CtrlKey
 - 適当なそれっぽいキーを押していると10ページ遷移します
 
 ## Test
