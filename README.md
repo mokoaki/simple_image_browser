@@ -16,10 +16,10 @@ This is the image viewer to use the web browser.
 
 上の方ほどサポートされてそうなブラウザ
 
-- Chrome 62.0.3202.94
-- Firefox 57.0.1
-- Safari 11.0.1 (13604.3.5)
-- Opera 49.0.2725.39
+- Chrome 64.0.3282.140
+- Firefox 58.0.2
+- Safari 11.0.3 (13604.5.6)
+- Opera 51.0.2830.26
 - MS-IE 11
 - MS-Edge 25
 
@@ -34,7 +34,7 @@ This is the image viewer to use the web browser.
 
 ## Setting
 
-設定はココだけ 画像ファイルへのパス、連番の桁数、拡張子を変更する
+設定は1箇所 画像ファイルへのパス、連番の桁数、拡張子を変更する
 
 ```js
 # app/js/siv.js
