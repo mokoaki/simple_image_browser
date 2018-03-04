@@ -97,7 +97,7 @@
     const replace_url_hash_set_timeout = () => {
       const page_str = "#" + current_page_hash_num.toString(10);
 
-      window.history.pushState(null, page_str, page_str);
+      window.history.replaceState(null, page_str, page_str);
 
       rewrite_hash_timeout_flg = false;
     };
@@ -142,7 +142,6 @@
       set_resize_event_to_window();
       set_mousemove_event_to_window();
       set_click_or_keydown_event_to_window();
-      set_popstate_event_to_window();
       set_load_event_to_image();
     };
 
@@ -197,15 +196,6 @@
       }
 
       event.stopPropagation();
-    };
-
-    const set_popstate_event_to_window = () => {
-      document.addEventListener("popstate", (event) => {
-        Page.hash_check_and_replace();
-        Image.update(Page.scroll_top);
-
-        event.stopPropagation();
-      }, true);
     };
 
     const set_load_event_to_image = () => {
