@@ -221,7 +221,7 @@
     event.stopPropagation();
   };
 
-  // window.Siv = {
+  // window.Sib = {
   //   Setting: Setting,
   //   Image:   Image,
   //   Page:    Page,

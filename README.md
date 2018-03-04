@@ -1,4 +1,4 @@
-# 俺用 simple image viewer
+# 俺用 simple image browser
 
 This is the image viewer to use the web browser.
 
@@ -28,16 +28,16 @@ This is the image viewer to use the web browser.
 通常使用で最低限必要なファイル
 
 - app/
-  - simple_image_viewer.html
-  - js/siv.js
-  - css/siv.css
+  - simple_image_browser.html
+  - js/sib.js
+  - css/sib.css
 
 ## Setting
 
 設定は1箇所 画像ファイルへのパス、連番の桁数、拡張子を変更する
 
 ```js
-# app/js/siv.js
+# app/js/sib.js
 
 var Setting = {
   // e.g.
