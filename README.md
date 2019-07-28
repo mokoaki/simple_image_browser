@@ -10,43 +10,47 @@ This is the image viewer to use the web browser.
 - 画像の最上部が表示領域の最下部までスクロールできる
 - 画像の最下部が表示領域の最上部までスクロールできる
 
-ただそれだけなのに、世の中の画像ビューアはそんな簡単な事も出来ないくせに要らない機能ばっかり実装しやがってそびえ立つクソしか無いので自作したのです
-
-## Browser support priority
-
-上の方ほどサポートされてそうなブラウザ
-
-- Chrome 64.0.3282.140
-- Firefox 58.0.2
-- Safari 11.0.3 (13604.5.6)
-- Opera 51.0.2830.26
-- MS-IE 11
-- MS-Edge 25
+世の中の画像ビューアはそんな簡単な事も出来ないくせに要らない機能は実装して複雑なので自作したのです
 
 ## Required files
 
 通常使用で最低限必要なファイル
 
-- app/
+- dist/
   - simple_image_browser.html
-  - js/sib.js
-  - css/sib.css
+  - simple_image_browser.js
+  - simple_image_browser.css
 
 ## Setting
 
-設定は1箇所 画像ファイルへのパス、連番の桁数、拡張子を変更する
+画像へのパスを設定する
 
-```js
-# app/js/sib.js
+```html
+<script>
+  SimpleImageBrowser.images([
+    './images/give_me_regards_black_jack/give_me_regards_black_jack_001.jpg',
+    './images/give_me_regards_black_jack/give_me_regards_black_jack_002.jpg',
+    './images/give_me_regards_black_jack/give_me_regards_black_jack_003.jpg'
+  ]);
+</script>
+```
 
-var Setting = {
-  // e.g.
-  // path/to/file_name_001.jpg
-  // ./images/irasutoya_001.jpg
-  file_path: "./images/irasutoya_",
-  zero_suppress_num: 3,
-  file_extension: ".jpg"
-};
+```html
+<script>
+  SimpleImageBrowser.images(
+    './images/give_me_regards_black_jack/give_me_regards_black_jack_{001..030}.jpg'
+  );
+</script>
+```
+
+```html
+<script>
+  SimpleImageBrowser.images([
+    './images/give_me_regards_black_jack/give_me_regards_black_jack_{001..030}.jpg',
+    './images/give_me_regards_black_jack/give_me_regards_black_jack_031.jpg',
+    './images/give_me_regards_black_jack/give_me_regards_black_jack_{032..059}.jpg'
+   ]);
+</script>
 ```
 
 ## Show next page
@@ -55,8 +59,8 @@ var Setting = {
 
 - Click right side of the window
 - Push enter key or right arrow key
-- ウィンドウの右の方をクリックする
-- エンターキーか右カーソルキーを押す
+- ウィンドウの右の方をクリック
+- エンターキーか右カーソルキー
 
 ## Show previous page
 
@@ -64,22 +68,25 @@ var Setting = {
 
 - Click left side of the window
 - Push left arrow key
-- ウィンドウの左の方をクリックする
-- 左カーソルキーを押す
+- ウィンドウの左の方をクリック
+- 左カーソルキー
 
 ## Accelerator
 
 もっと先へ加速したくはないか、少年
 
 - Move 10 pages if hold down MetaKey, ShiftKey, AltKey, CtrlKey
-- 適当なそれっぽいキーを押していると10ページ遷移します
+- 適当なそれっぽいキーを押していると10ページ遷移する
+
+## Dev
+
+```sh
+yarn install
+yarn run server
+```
 
 ## Test
 
 テスト
 
 - WIP
-
-## License
-
-MIT

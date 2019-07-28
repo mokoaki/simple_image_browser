@@ -1,2 +1,4 @@
 .DS_Store
-/app/images/
+/node_modules
+/tmp
+/dist/images

@@ -1,0 +1,23 @@
+{
+  "root": true,
+  "extends": [
+    "standard"
+  ],
+  "env": {
+    // Node.jsの変数や構文を許可
+    // "node": true,
+    // "browser": true,
+    // "commonjs": true,
+    // ES2015で追加されたグローバル変数等を許可 (ESModules機能には関与しない)
+    // "es6": true
+  },
+  "parserOptions": {
+    // ESModules機能を有効
+    // "sourceType": "module"
+    // ESの構文を有効
+    // "ecmaVersion": 2019
+  },
+  "rules": {
+    "brace-style": ["error", "stroustrup"]
+  }
+}
