@@ -65,15 +65,11 @@ export class Util {
   // }
 
   static isTypeArray (obj) {
-    if (Array.isArray && Array.isArray(obj)) {
-      return true
-    }
+    return Array.isArray(obj)
 
-    if (this.isType(obj) === '[object Array]') {
-      return true
-    }
-
-    return false
+    // if (this.isType(obj) === '[object Array]') {
+    //   return true
+    // }
   }
 
   // static isTypeUndefined (obj) {
